@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file path="sobel_sim/sobel.vhd" type="VHDL" />
+ <topLevel name="sobel" />
+ <deviceFamily name="cyclonev" />
+</simPackage>
