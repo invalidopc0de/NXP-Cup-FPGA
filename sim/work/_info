@@ -1,0 +1,379 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/Mark/OneDrive/Documents/School/Fall 2016/IDE/NXP/NXPExpiraments/NXP_FPGA/sim
+Ecamera
+Z1 w1478581917
+Z2 DPx4 work 14 nxp_fpga_types 0 22 KIFhcT8Zh3dT85E9]JR[z3
+Z3 DPx4 ieee 11 numeric_std 0 22 :ASDNFgHXf_ih3J@9F3Ze1
+Z4 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z5 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z6 8../src/camera.vhd
+Z7 F../src/camera.vhd
+l0
+L9
+VZbVfL7`SS8ToS;8ac7Z[82
+!s100 X:jiOfQfS[zM;0H6IW@F61
+Z8 OV;C;10.4b;61
+32
+Z9 !s110 1478581920
+!i10b 1
+Z10 !s108 1478581920.000000
+Z11 !s90 -reportprogress|300|../src/camera.vhd|
+Z12 !s107 ../src/camera.vhd|
+!i113 1
+Z13 tExplicit 1
+Amagic
+R2
+R3
+R4
+R5
+Z14 DEx4 work 6 camera 0 22 ZbVfL7`SS8ToS;8ac7Z[82
+l65
+L19
+VkkYYKiC[87Dh6g72M9nVX0
+!s100 EieSUPfe:QTe@S^>YMajb2
+R8
+32
+R9
+!i10b 1
+R10
+R11
+R12
+!i113 1
+R13
+Ecamera_tb
+Z15 w1478580462
+R3
+R2
+R4
+R5
+R0
+Z16 8camera_tb.vhd
+Z17 Fcamera_tb.vhd
+l0
+L17
+V9Pn1?EzoOIaEO;=AG=V:l3
+!s100 <Ei[_b;;GGMRnZNG13SkH2
+R8
+32
+R9
+!i10b 1
+R10
+Z18 !s90 -reportprogress|300|camera_tb.vhd|
+Z19 !s107 camera_tb.vhd|
+!i113 1
+R13
+Atest
+R14
+R3
+R2
+R4
+R5
+DEx4 work 9 camera_tb 0 22 9Pn1?EzoOIaEO;=AG=V:l3
+l29
+L19
+VNN>_m5zK^P>>Pbaa5eO5;1
+!s100 6ndlBkQ4nMzALLGzO=eG:0
+R8
+32
+R9
+!i10b 1
+R10
+R18
+R19
+!i113 1
+R13
+Eedge_filter
+Z20 w1478658780
+Z21 DPx4 work 14 nxp_fpga_types 0 22 [bbIzYgmc?Y1BS@`GQXV21
+R3
+R4
+R5
+R0
+Z22 8../src/edge_filter.vhd
+Z23 F../src/edge_filter.vhd
+l0
+L14
+VlUA1DeGMbDzl=2jYiXhii3
+!s100 V3Dn]F5db_MbICRoQBU5M0
+R8
+32
+Z24 !s110 1478659396
+!i10b 1
+Z25 !s108 1478659396.000000
+Z26 !s90 -reportprogress|300|../src/edge_filter.vhd|
+Z27 !s107 ../src/edge_filter.vhd|
+!i113 1
+R13
+Amagic
+R21
+R3
+R4
+R5
+DEx4 work 11 edge_filter 0 22 lUA1DeGMbDzl=2jYiXhii3
+l83
+L24
+VjD8SNzT_5bza9nBm=A=Sc3
+!s100 @nVOGW8BZKf5Pa6d:ahA:2
+R8
+32
+R24
+!i10b 1
+R25
+R26
+R27
+!i113 1
+R13
+Eedge_filter_tb
+Z28 w1479188693
+R21
+R3
+R4
+R5
+R0
+Z29 8motor_driver_tb.vhd
+Z30 Fmotor_driver_tb.vhd
+l0
+L18
+V:d3LOL=m=6ALFUS5L>3YW1
+!s100 Sn0DaHYJAL@gnT`Rnz[6@1
+R8
+32
+Z31 !s110 1479188696
+!i10b 1
+Z32 !s108 1479188696.000000
+Z33 !s90 -reportprogress|300|motor_driver_tb.vhd|
+Z34 !s107 motor_driver_tb.vhd|
+!i113 1
+R13
+Atest
+Z35 DEx4 work 19 motor_driver_avalon 0 22 ?_fklCo;YYTAeQK][TV@H1
+R21
+R3
+R4
+R5
+DEx4 work 14 edge_filter_tb 0 22 :d3LOL=m=6ALFUS5L>3YW1
+l36
+L20
+VU8no;WdgJcad[NQ7EA[T10
+!s100 bZYgh@@;LNSRnO8hleXo>3
+R8
+32
+R31
+!i10b 1
+R32
+R33
+R34
+!i113 1
+R13
+Emotor_driver_avalon
+Z36 w1479189537
+R3
+R4
+R5
+R0
+Z37 8../src/motor_driver/motor_driver_avalon.vhd
+Z38 F../src/motor_driver/motor_driver_avalon.vhd
+l0
+L17
+V?_fklCo;YYTAeQK][TV@H1
+!s100 2zaOYAlA`b_=jiJ8fcJRk3
+R8
+32
+Z39 !s110 1479225776
+!i10b 1
+Z40 !s108 1479225776.000000
+Z41 !s90 -reportprogress|300|../src/motor_driver/motor_driver_avalon.vhd|
+Z42 !s107 ../src/motor_driver/motor_driver_avalon.vhd|
+!i113 1
+R13
+Artl
+R3
+R4
+R5
+R35
+l93
+L38
+VX3RcYD0M[djmzlFiNc<h<0
+!s100 dY@1X=CZLU^RTUn^a_BcQ0
+R8
+32
+R39
+!i10b 1
+R40
+R41
+R42
+!i113 1
+R13
+Emotor_driver_tb
+Z43 w1479189502
+R21
+R3
+R4
+R5
+R0
+R29
+R30
+l0
+L18
+VYmmgOIJ1S2e_a`h`8O@c[2
+!s100 o7aRoOZmOSSJP>SEJZYe@1
+R8
+32
+R39
+!i10b 1
+R40
+R33
+R34
+!i113 1
+R13
+Atest
+R35
+R21
+R3
+R4
+R5
+Z44 DEx4 work 15 motor_driver_tb 0 22 YmmgOIJ1S2e_a`h`8O@c[2
+l36
+L20
+Z45 V[PmKmclE1D5>f8FGdNI0V2
+Z46 !s100 5SZm@eNAzb>=TamOce3:m1
+R8
+32
+R39
+!i10b 1
+R40
+R33
+R34
+!i113 1
+R13
+Pnxp_fpga_types
+R3
+R4
+R5
+w1478655762
+R0
+8../src/nxp_fpga_types.vhd
+F../src/nxp_fpga_types.vhd
+l0
+L5
+V[bbIzYgmc?Y1BS@`GQXV21
+!s100 [^d_O]:Mii_8EDhzCR:AW2
+R8
+32
+!s110 1478659395
+!i10b 1
+Z47 !s108 1478659395.000000
+!s90 -reportprogress|300|../src/nxp_fpga_types.vhd|
+!s107 ../src/nxp_fpga_types.vhd|
+!i113 1
+R13
+Epwm
+Z48 w1479182744
+Z49 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+Z50 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+R4
+R5
+R0
+Z51 8../src/motor_driver/thirdparty/pwm.vhd
+Z52 F../src/motor_driver/thirdparty/pwm.vhd
+l0
+L30
+Vi<SX6oz3_W52SWXhC?=_D2
+!s100 fl675Z]f@W6fJ4_MAP4EI3
+R8
+32
+R39
+!i10b 1
+R40
+Z53 !s90 -reportprogress|300|../src/motor_driver/thirdparty/pwm.vhd|
+Z54 !s107 ../src/motor_driver/thirdparty/pwm.vhd|
+!i113 1
+R13
+Alogic
+R49
+R50
+R4
+R5
+DEx4 work 3 pwm 0 22 i<SX6oz3_W52SWXhC?=_D2
+l52
+L45
+VUWzCz2;_W2HQC<foXck<C3
+!s100 kf6R^@[<:dYEl<CE3oIFV0
+R8
+32
+R39
+!i10b 1
+R40
+R53
+R54
+!i113 1
+R13
+Esobel
+Z55 w1478644400
+Z56 DPx12 altera_lnsim 23 altera_lnsim_components 0 22 6JY960D0bDocA`LkFTb[j1
+R4
+R5
+R0
+Z57 8../ip/sobel/sobel_sim/sobel.vhd
+Z58 F../ip/sobel/sobel_sim/sobel.vhd
+l0
+L20
+V?MBOQ:OI;8<RS`UFYDFb10
+!s100 BX<oYc9bVR5A^5dBTo51`0
+R8
+32
+R24
+!i10b 1
+R47
+Z59 !s90 -reportprogress|300|../ip/sobel/sobel_sim/sobel.vhd|
+Z60 !s107 ../ip/sobel/sobel_sim/sobel.vhd|
+!i113 1
+R13
+Asyn
+R56
+R4
+R5
+DEx4 work 5 sobel 0 22 ?MBOQ:OI;8<RS`UFYDFb10
+l44
+L38
+VdMblW1_z?O4>0;l>l=4zn2
+!s100 C7bFK9?MVVFCoGi4L0U;d1
+R8
+32
+R24
+!i10b 1
+R47
+R59
+R60
+!i113 1
+R13
+Artl
+R3
+R4
+R5
+DEx4 work 5 sobel 0 22 cYOU8Wcd=K4eN]hD8QMo32
+l44
+L27
+V31V2lOadIU`3I5Q8C9XA[0
+!s100 c9NL88iO0HWl_O6[<4a=D0
+R8
+32
+!s110 1478657387
+!i10b 1
+!s108 1478657387.000000
+!s90 -reportprogress|300|../ip/sobel/sobel.vhd|
+!s107 ../ip/sobel/sobel.vhd|
+!i113 1
+R13
+F../ip/sobel/sobel.vhd
+w1478644416
+8../ip/sobel/sobel.vhd

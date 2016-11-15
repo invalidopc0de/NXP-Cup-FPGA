@@ -14,6 +14,7 @@ package nxp_fpga_types is
     type camera_out_type is record
         sensor_data : std_logic_vector(SAMPLE_LEN-1 downto 0);
         data_sof    : std_logic; -- Start of frame
+        data_eof    : std_logic; -- End of frame
         data_valid  : std_logic;
 
         adc_capture : std_logic;
