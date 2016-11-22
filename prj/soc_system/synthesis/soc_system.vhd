@@ -9,6 +9,12 @@ use IEEE.numeric_std.all;
 entity soc_system is
 	port (
 		button_pio_external_connection_export : in    std_logic_vector(3 downto 0)  := (others => '0'); -- button_pio_external_connection.export
+		camera_pins_adc_convst_pin            : out   std_logic;                                        --                    camera_pins.adc_convst_pin
+		camera_pins_adc_sck_pin               : out   std_logic;                                        --                               .adc_sck_pin
+		camera_pins_adc_sdi_pin               : out   std_logic;                                        --                               .adc_sdi_pin
+		camera_pins_adc_sdo_pin               : in    std_logic                     := '0';             --                               .adc_sdo_pin
+		camera_pins_camera_clk_pin            : out   std_logic;                                        --                               .camera_clk_pin
+		camera_pins_camera_si_pin             : out   std_logic;                                        --                               .camera_si_pin
 		clk_clk                               : in    std_logic                     := '0';             --                            clk.clk
 		dipsw_pio_external_connection_export  : in    std_logic_vector(3 downto 0)  := (others => '0'); --  dipsw_pio_external_connection.export
 		hps_0_f2h_cold_reset_req_reset_n      : in    std_logic                     := '0';             --       hps_0_f2h_cold_reset_req.reset_n
@@ -88,6 +94,15 @@ entity soc_system is
 end entity soc_system;
 
 architecture rtl of soc_system is
+	component soc_system_adc_clk_40Mhz is
+		port (
+			refclk   : in  std_logic := 'X'; -- clk
+			rst      : in  std_logic := 'X'; -- reset
+			outclk_0 : out std_logic;        -- clk
+			locked   : out std_logic         -- export
+		);
+	end component soc_system_adc_clk_40Mhz;
+
 	component soc_system_button_pio is
 		port (
 			clk        : in  std_logic                     := 'X';             -- clk
@@ -101,6 +116,67 @@ architecture rtl of soc_system is
 			irq        : out std_logic                                         -- irq
 		);
 	end component soc_system_button_pio;
+
+	component altera_avalon_dc_fifo is
+		generic (
+			SYMBOLS_PER_BEAT   : integer := 1;
+			BITS_PER_SYMBOL    : integer := 8;
+			FIFO_DEPTH         : integer := 16;
+			CHANNEL_WIDTH      : integer := 0;
+			ERROR_WIDTH        : integer := 0;
+			USE_PACKETS        : integer := 0;
+			USE_IN_FILL_LEVEL  : integer := 0;
+			USE_OUT_FILL_LEVEL : integer := 0;
+			WR_SYNC_DEPTH      : integer := 3;
+			RD_SYNC_DEPTH      : integer := 3
+		);
+		port (
+			in_clk            : in  std_logic                     := 'X';             -- clk
+			in_reset_n        : in  std_logic                     := 'X';             -- reset_n
+			out_clk           : in  std_logic                     := 'X';             -- clk
+			out_reset_n       : in  std_logic                     := 'X';             -- reset_n
+			in_data           : in  std_logic_vector(31 downto 0) := (others => 'X'); -- data
+			in_valid          : in  std_logic                     := 'X';             -- valid
+			in_ready          : out std_logic;                                        -- ready
+			in_startofpacket  : in  std_logic                     := 'X';             -- startofpacket
+			in_endofpacket    : in  std_logic                     := 'X';             -- endofpacket
+			out_data          : out std_logic_vector(31 downto 0);                    -- data
+			out_valid         : out std_logic;                                        -- valid
+			out_ready         : in  std_logic                     := 'X';             -- ready
+			out_startofpacket : out std_logic;                                        -- startofpacket
+			out_endofpacket   : out std_logic;                                        -- endofpacket
+			in_csr_address    : in  std_logic                     := 'X';             -- address
+			in_csr_read       : in  std_logic                     := 'X';             -- read
+			in_csr_write      : in  std_logic                     := 'X';             -- write
+			in_csr_readdata   : out std_logic_vector(31 downto 0);                    -- readdata
+			in_csr_writedata  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
+			out_csr_address   : in  std_logic                     := 'X';             -- address
+			out_csr_read      : in  std_logic                     := 'X';             -- read
+			out_csr_write     : in  std_logic                     := 'X';             -- write
+			out_csr_readdata  : out std_logic_vector(31 downto 0);                    -- readdata
+			out_csr_writedata : in  std_logic_vector(31 downto 0) := (others => 'X')  -- writedata
+		);
+	end component altera_avalon_dc_fifo;
+
+	component soc_system_camera_data is
+		port (
+			wrclock                       : in  std_logic                     := 'X';             -- clk
+			reset_n                       : in  std_logic                     := 'X';             -- reset_n
+			avalonst_sink_valid           : in  std_logic                     := 'X';             -- valid
+			avalonst_sink_data            : in  std_logic_vector(31 downto 0) := (others => 'X'); -- data
+			avalonst_sink_startofpacket   : in  std_logic                     := 'X';             -- startofpacket
+			avalonst_sink_endofpacket     : in  std_logic                     := 'X';             -- endofpacket
+			avalonmm_read_slave_readdata  : out std_logic_vector(31 downto 0);                    -- readdata
+			avalonmm_read_slave_read      : in  std_logic                     := 'X';             -- read
+			avalonmm_read_slave_address   : in  std_logic                     := 'X';             -- address
+			wrclk_control_slave_address   : in  std_logic_vector(2 downto 0)  := (others => 'X'); -- address
+			wrclk_control_slave_read      : in  std_logic                     := 'X';             -- read
+			wrclk_control_slave_writedata : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
+			wrclk_control_slave_write     : in  std_logic                     := 'X';             -- write
+			wrclk_control_slave_readdata  : out std_logic_vector(31 downto 0);                    -- readdata
+			wrclk_control_slave_irq       : out std_logic                                         -- irq
+		);
+	end component soc_system_camera_data;
 
 	component soc_system_dipsw_pio is
 		port (
@@ -372,6 +448,29 @@ architecture rtl of soc_system is
 		);
 	end component soc_system_led_pio;
 
+	component line_scan_camera_st is
+		port (
+			data_out_endofpacket   : out std_logic;                                        -- endofpacket
+			data_out_data          : out std_logic_vector(31 downto 0);                    -- data
+			data_out_startofpacket : out std_logic;                                        -- startofpacket
+			data_out_valid         : out std_logic;                                        -- valid
+			control_address        : in  std_logic_vector(7 downto 0)  := (others => 'X'); -- address
+			control_read           : in  std_logic                     := 'X';             -- read
+			control_readdata       : out std_logic_vector(31 downto 0);                    -- readdata
+			control_write          : in  std_logic                     := 'X';             -- write
+			control_writedata      : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
+			control_waitrequest    : out std_logic;                                        -- waitrequest
+			adc_convst             : out std_logic;                                        -- adc_convst_pin
+			adc_sck                : out std_logic;                                        -- adc_sck_pin
+			adc_sdi                : out std_logic;                                        -- adc_sdi_pin
+			adc_sdo                : in  std_logic                     := 'X';             -- adc_sdo_pin
+			camera_clk             : out std_logic;                                        -- camera_clk_pin
+			camera_si              : out std_logic;                                        -- camera_si_pin
+			reset_reset            : in  std_logic                     := 'X';             -- reset_n
+			clock_clk              : in  std_logic                     := 'X'              -- clk
+		);
+	end component line_scan_camera_st;
+
 	component motor_driver_avalon is
 		generic (
 			sys_clk         : integer := 50000000;
@@ -491,10 +590,12 @@ architecture rtl of soc_system is
 			hps_0_h2f_lw_axi_master_rlast                                    : out std_logic;                                        -- rlast
 			hps_0_h2f_lw_axi_master_rvalid                                   : out std_logic;                                        -- rvalid
 			hps_0_h2f_lw_axi_master_rready                                   : in  std_logic                     := 'X';             -- rready
+			adc_clk_40Mhz_outclk0_clk                                        : in  std_logic                     := 'X';             -- clk
 			clk_0_clk_clk                                                    : in  std_logic                     := 'X';             -- clk
+			camera_data_reset_in_reset_bridge_in_reset_reset                 : in  std_logic                     := 'X';             -- reset
 			fpga_only_master_clk_reset_reset_bridge_in_reset_reset           : in  std_logic                     := 'X';             -- reset
 			hps_0_h2f_axi_master_agent_clk_reset_reset_bridge_in_reset_reset : in  std_logic                     := 'X';             -- reset
-			onchip_memory2_0_reset1_reset_bridge_in_reset_reset              : in  std_logic                     := 'X';             -- reset
+			line_scan_camera_clk_reset_reset_bridge_in_reset_reset           : in  std_logic                     := 'X';             -- reset
 			fpga_only_master_master_address                                  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- address
 			fpga_only_master_master_waitrequest                              : out std_logic;                                        -- waitrequest
 			fpga_only_master_master_byteenable                               : in  std_logic_vector(3 downto 0)  := (others => 'X'); -- byteenable
@@ -508,6 +609,14 @@ architecture rtl of soc_system is
 			button_pio_s1_readdata                                           : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			button_pio_s1_writedata                                          : out std_logic_vector(31 downto 0);                    -- writedata
 			button_pio_s1_chipselect                                         : out std_logic;                                        -- chipselect
+			camera_data_in_csr_address                                       : out std_logic_vector(2 downto 0);                     -- address
+			camera_data_in_csr_write                                         : out std_logic;                                        -- write
+			camera_data_in_csr_read                                          : out std_logic;                                        -- read
+			camera_data_in_csr_readdata                                      : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			camera_data_in_csr_writedata                                     : out std_logic_vector(31 downto 0);                    -- writedata
+			camera_data_out_address                                          : out std_logic_vector(0 downto 0);                     -- address
+			camera_data_out_read                                             : out std_logic;                                        -- read
+			camera_data_out_readdata                                         : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			dipsw_pio_s1_address                                             : out std_logic_vector(1 downto 0);                     -- address
 			dipsw_pio_s1_write                                               : out std_logic;                                        -- write
 			dipsw_pio_s1_readdata                                            : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
@@ -528,6 +637,12 @@ architecture rtl of soc_system is
 			led_pio_s1_readdata                                              : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
 			led_pio_s1_writedata                                             : out std_logic_vector(31 downto 0);                    -- writedata
 			led_pio_s1_chipselect                                            : out std_logic;                                        -- chipselect
+			line_scan_camera_control_address                                 : out std_logic_vector(7 downto 0);                     -- address
+			line_scan_camera_control_write                                   : out std_logic;                                        -- write
+			line_scan_camera_control_read                                    : out std_logic;                                        -- read
+			line_scan_camera_control_readdata                                : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			line_scan_camera_control_writedata                               : out std_logic_vector(31 downto 0);                    -- writedata
+			line_scan_camera_control_waitrequest                             : in  std_logic                     := 'X';             -- waitrequest
 			motor_driver_0_avs_s0_address                                    : out std_logic_vector(7 downto 0);                     -- address
 			motor_driver_0_avs_s0_write                                      : out std_logic;                                        -- write
 			motor_driver_0_avs_s0_read                                       : out std_logic;                                        -- read
@@ -608,6 +723,7 @@ architecture rtl of soc_system is
 			receiver0_irq : in  std_logic                     := 'X'; -- irq
 			receiver1_irq : in  std_logic                     := 'X'; -- irq
 			receiver2_irq : in  std_logic                     := 'X'; -- irq
+			receiver3_irq : in  std_logic                     := 'X'; -- irq
 			sender_irq    : out std_logic_vector(31 downto 0)         -- irq
 		);
 	end component soc_system_irq_mapper;
@@ -619,6 +735,74 @@ architecture rtl of soc_system is
 			sender_irq : out std_logic_vector(31 downto 0)         -- irq
 		);
 	end component soc_system_irq_mapper_001;
+
+	component soc_system_avalon_st_adapter is
+		generic (
+			inBitsPerSymbol : integer := 8;
+			inUsePackets    : integer := 0;
+			inDataWidth     : integer := 8;
+			inChannelWidth  : integer := 3;
+			inErrorWidth    : integer := 2;
+			inUseEmptyPort  : integer := 0;
+			inUseValid      : integer := 1;
+			inUseReady      : integer := 1;
+			inReadyLatency  : integer := 0;
+			outDataWidth    : integer := 32;
+			outChannelWidth : integer := 3;
+			outErrorWidth   : integer := 2;
+			outUseEmptyPort : integer := 0;
+			outUseValid     : integer := 1;
+			outUseReady     : integer := 1;
+			outReadyLatency : integer := 0
+		);
+		port (
+			in_clk_0_clk        : in  std_logic                     := 'X';             -- clk
+			in_rst_0_reset      : in  std_logic                     := 'X';             -- reset
+			in_0_data           : in  std_logic_vector(31 downto 0) := (others => 'X'); -- data
+			in_0_valid          : in  std_logic                     := 'X';             -- valid
+			in_0_startofpacket  : in  std_logic                     := 'X';             -- startofpacket
+			in_0_endofpacket    : in  std_logic                     := 'X';             -- endofpacket
+			out_0_data          : out std_logic_vector(31 downto 0);                    -- data
+			out_0_valid         : out std_logic;                                        -- valid
+			out_0_ready         : in  std_logic                     := 'X';             -- ready
+			out_0_startofpacket : out std_logic;                                        -- startofpacket
+			out_0_endofpacket   : out std_logic                                         -- endofpacket
+		);
+	end component soc_system_avalon_st_adapter;
+
+	component soc_system_avalon_st_adapter_001 is
+		generic (
+			inBitsPerSymbol : integer := 8;
+			inUsePackets    : integer := 0;
+			inDataWidth     : integer := 8;
+			inChannelWidth  : integer := 3;
+			inErrorWidth    : integer := 2;
+			inUseEmptyPort  : integer := 0;
+			inUseValid      : integer := 1;
+			inUseReady      : integer := 1;
+			inReadyLatency  : integer := 0;
+			outDataWidth    : integer := 32;
+			outChannelWidth : integer := 3;
+			outErrorWidth   : integer := 2;
+			outUseEmptyPort : integer := 0;
+			outUseValid     : integer := 1;
+			outUseReady     : integer := 1;
+			outReadyLatency : integer := 0
+		);
+		port (
+			in_clk_0_clk        : in  std_logic                     := 'X';             -- clk
+			in_rst_0_reset      : in  std_logic                     := 'X';             -- reset
+			in_0_data           : in  std_logic_vector(31 downto 0) := (others => 'X'); -- data
+			in_0_valid          : in  std_logic                     := 'X';             -- valid
+			in_0_ready          : out std_logic;                                        -- ready
+			in_0_startofpacket  : in  std_logic                     := 'X';             -- startofpacket
+			in_0_endofpacket    : in  std_logic                     := 'X';             -- endofpacket
+			out_0_data          : out std_logic_vector(31 downto 0);                    -- data
+			out_0_valid         : out std_logic;                                        -- valid
+			out_0_startofpacket : out std_logic;                                        -- startofpacket
+			out_0_endofpacket   : out std_logic                                         -- endofpacket
+		);
+	end component soc_system_avalon_st_adapter_001;
 
 	component soc_system_rst_controller is
 		generic (
@@ -753,6 +937,7 @@ architecture rtl of soc_system is
 	end component soc_system_rst_controller_001;
 
 	signal hps_0_h2f_reset_reset                                         : std_logic;                      -- hps_0:h2f_rst_n -> [hps_0_h2f_reset_reset_n, hps_0_h2f_reset_reset_n:in]
+	signal adc_clk_40mhz_outclk0_clk                                     : std_logic;                      -- adc_clk_40Mhz:outclk_0 -> [avalon_st_adapter:in_clk_0_clk, camera_clk_cross:in_clk, line_scan_camera:clock_clk, mm_interconnect_0:adc_clk_40Mhz_outclk0_clk, rst_controller_001:clk]
 	signal hps_0_h2f_axi_master_awburst                                  : std_logic_vector(1 downto 0);   -- hps_0:h2f_AWBURST -> mm_interconnect_0:hps_0_h2f_axi_master_awburst
 	signal hps_0_h2f_axi_master_arlen                                    : std_logic_vector(3 downto 0);   -- hps_0:h2f_ARLEN -> mm_interconnect_0:hps_0_h2f_axi_master_arlen
 	signal hps_0_h2f_axi_master_wstrb                                    : std_logic_vector(7 downto 0);   -- hps_0:h2f_WSTRB -> mm_interconnect_0:hps_0_h2f_axi_master_wstrb
@@ -833,6 +1018,9 @@ architecture rtl of soc_system is
 	signal hps_0_h2f_lw_axi_master_awsize                                : std_logic_vector(2 downto 0);   -- hps_0:h2f_lw_AWSIZE -> mm_interconnect_0:hps_0_h2f_lw_axi_master_awsize
 	signal hps_0_h2f_lw_axi_master_awvalid                               : std_logic;                      -- hps_0:h2f_lw_AWVALID -> mm_interconnect_0:hps_0_h2f_lw_axi_master_awvalid
 	signal hps_0_h2f_lw_axi_master_rvalid                                : std_logic;                      -- mm_interconnect_0:hps_0_h2f_lw_axi_master_rvalid -> hps_0:h2f_lw_RVALID
+	signal mm_interconnect_0_camera_data_out_readdata                    : std_logic_vector(31 downto 0);  -- camera_data:avalonmm_read_slave_readdata -> mm_interconnect_0:camera_data_out_readdata
+	signal mm_interconnect_0_camera_data_out_address                     : std_logic_vector(0 downto 0);   -- mm_interconnect_0:camera_data_out_address -> camera_data:avalonmm_read_slave_address
+	signal mm_interconnect_0_camera_data_out_read                        : std_logic;                      -- mm_interconnect_0:camera_data_out_read -> camera_data:avalonmm_read_slave_read
 	signal mm_interconnect_0_onchip_memory2_0_s1_chipselect              : std_logic;                      -- mm_interconnect_0:onchip_memory2_0_s1_chipselect -> onchip_memory2_0:chipselect
 	signal mm_interconnect_0_onchip_memory2_0_s1_readdata                : std_logic_vector(63 downto 0);  -- onchip_memory2_0:readdata -> mm_interconnect_0:onchip_memory2_0_s1_readdata
 	signal mm_interconnect_0_onchip_memory2_0_s1_address                 : std_logic_vector(12 downto 0);  -- mm_interconnect_0:onchip_memory2_0_s1_address -> onchip_memory2_0:address
@@ -856,8 +1044,19 @@ architecture rtl of soc_system is
 	signal mm_interconnect_0_motor_driver_0_avs_s0_read                  : std_logic;                      -- mm_interconnect_0:motor_driver_0_avs_s0_read -> motor_driver_0:avs_s0_read
 	signal mm_interconnect_0_motor_driver_0_avs_s0_write                 : std_logic;                      -- mm_interconnect_0:motor_driver_0_avs_s0_write -> motor_driver_0:avs_s0_write
 	signal mm_interconnect_0_motor_driver_0_avs_s0_writedata             : std_logic_vector(31 downto 0);  -- mm_interconnect_0:motor_driver_0_avs_s0_writedata -> motor_driver_0:avs_s0_writedata
+	signal mm_interconnect_0_line_scan_camera_control_readdata           : std_logic_vector(31 downto 0);  -- line_scan_camera:control_readdata -> mm_interconnect_0:line_scan_camera_control_readdata
+	signal mm_interconnect_0_line_scan_camera_control_waitrequest        : std_logic;                      -- line_scan_camera:control_waitrequest -> mm_interconnect_0:line_scan_camera_control_waitrequest
+	signal mm_interconnect_0_line_scan_camera_control_address            : std_logic_vector(7 downto 0);   -- mm_interconnect_0:line_scan_camera_control_address -> line_scan_camera:control_address
+	signal mm_interconnect_0_line_scan_camera_control_read               : std_logic;                      -- mm_interconnect_0:line_scan_camera_control_read -> line_scan_camera:control_read
+	signal mm_interconnect_0_line_scan_camera_control_write              : std_logic;                      -- mm_interconnect_0:line_scan_camera_control_write -> line_scan_camera:control_write
+	signal mm_interconnect_0_line_scan_camera_control_writedata          : std_logic_vector(31 downto 0);  -- mm_interconnect_0:line_scan_camera_control_writedata -> line_scan_camera:control_writedata
 	signal mm_interconnect_0_sysid_qsys_control_slave_readdata           : std_logic_vector(31 downto 0);  -- sysid_qsys:readdata -> mm_interconnect_0:sysid_qsys_control_slave_readdata
 	signal mm_interconnect_0_sysid_qsys_control_slave_address            : std_logic_vector(0 downto 0);   -- mm_interconnect_0:sysid_qsys_control_slave_address -> sysid_qsys:address
+	signal mm_interconnect_0_camera_data_in_csr_readdata                 : std_logic_vector(31 downto 0);  -- camera_data:wrclk_control_slave_readdata -> mm_interconnect_0:camera_data_in_csr_readdata
+	signal mm_interconnect_0_camera_data_in_csr_address                  : std_logic_vector(2 downto 0);   -- mm_interconnect_0:camera_data_in_csr_address -> camera_data:wrclk_control_slave_address
+	signal mm_interconnect_0_camera_data_in_csr_read                     : std_logic;                      -- mm_interconnect_0:camera_data_in_csr_read -> camera_data:wrclk_control_slave_read
+	signal mm_interconnect_0_camera_data_in_csr_write                    : std_logic;                      -- mm_interconnect_0:camera_data_in_csr_write -> camera_data:wrclk_control_slave_write
+	signal mm_interconnect_0_camera_data_in_csr_writedata                : std_logic_vector(31 downto 0);  -- mm_interconnect_0:camera_data_in_csr_writedata -> camera_data:wrclk_control_slave_writedata
 	signal mm_interconnect_0_led_pio_s1_chipselect                       : std_logic;                      -- mm_interconnect_0:led_pio_s1_chipselect -> led_pio:chipselect
 	signal mm_interconnect_0_led_pio_s1_readdata                         : std_logic_vector(31 downto 0);  -- led_pio:readdata -> mm_interconnect_0:led_pio_s1_readdata
 	signal mm_interconnect_0_led_pio_s1_address                          : std_logic_vector(1 downto 0);   -- mm_interconnect_0:led_pio_s1_address -> led_pio:address
@@ -922,22 +1121,51 @@ architecture rtl of soc_system is
 	signal hps_0_f2h_irq0_irq                                            : std_logic_vector(31 downto 0);  -- irq_mapper:sender_irq -> hps_0:f2h_irq_p0
 	signal hps_0_f2h_irq1_irq                                            : std_logic_vector(31 downto 0);  -- irq_mapper_001:sender_irq -> hps_0:f2h_irq_p1
 	signal intr_capturer_0_interrupt_receiver_irq                        : std_logic_vector(31 downto 0);  -- irq_mapper_002:sender_irq -> intr_capturer_0:interrupt_in
-	signal irq_mapper_receiver1_irq                                      : std_logic;                      -- button_pio:irq -> [irq_mapper:receiver1_irq, irq_mapper_002:receiver1_irq]
-	signal irq_mapper_receiver2_irq                                      : std_logic;                      -- dipsw_pio:irq -> [irq_mapper:receiver2_irq, irq_mapper_002:receiver2_irq]
-	signal irq_mapper_receiver0_irq                                      : std_logic;                      -- jtag_uart:av_irq -> [irq_mapper:receiver0_irq, irq_mapper_002:receiver0_irq]
-	signal rst_controller_reset_out_reset                                : std_logic;                      -- rst_controller:reset_out -> [irq_mapper_002:reset, mm_interconnect_0:fpga_only_master_clk_reset_reset_bridge_in_reset_reset, mm_interconnect_0:onchip_memory2_0_reset1_reset_bridge_in_reset_reset, mm_interconnect_1:hps_only_master_clk_reset_reset_bridge_in_reset_reset, mm_interconnect_1:hps_only_master_master_translator_reset_reset_bridge_in_reset_reset, onchip_memory2_0:reset, rst_controller_reset_out_reset:in, rst_translator:in_reset]
+	signal irq_mapper_receiver2_irq                                      : std_logic;                      -- button_pio:irq -> [irq_mapper:receiver2_irq, irq_mapper_002:receiver2_irq]
+	signal irq_mapper_receiver0_irq                                      : std_logic;                      -- camera_data:wrclk_control_slave_irq -> [irq_mapper:receiver0_irq, irq_mapper_002:receiver0_irq]
+	signal irq_mapper_receiver3_irq                                      : std_logic;                      -- dipsw_pio:irq -> [irq_mapper:receiver3_irq, irq_mapper_002:receiver3_irq]
+	signal irq_mapper_receiver1_irq                                      : std_logic;                      -- jtag_uart:av_irq -> [irq_mapper:receiver1_irq, irq_mapper_002:receiver1_irq]
+	signal line_scan_camera_data_out_valid                               : std_logic;                      -- line_scan_camera:data_out_valid -> avalon_st_adapter:in_0_valid
+	signal line_scan_camera_data_out_data                                : std_logic_vector(31 downto 0);  -- line_scan_camera:data_out_data -> avalon_st_adapter:in_0_data
+	signal line_scan_camera_data_out_startofpacket                       : std_logic;                      -- line_scan_camera:data_out_startofpacket -> avalon_st_adapter:in_0_startofpacket
+	signal line_scan_camera_data_out_endofpacket                         : std_logic;                      -- line_scan_camera:data_out_endofpacket -> avalon_st_adapter:in_0_endofpacket
+	signal avalon_st_adapter_out_0_valid                                 : std_logic;                      -- avalon_st_adapter:out_0_valid -> camera_clk_cross:in_valid
+	signal avalon_st_adapter_out_0_data                                  : std_logic_vector(31 downto 0);  -- avalon_st_adapter:out_0_data -> camera_clk_cross:in_data
+	signal avalon_st_adapter_out_0_ready                                 : std_logic;                      -- camera_clk_cross:in_ready -> avalon_st_adapter:out_0_ready
+	signal avalon_st_adapter_out_0_startofpacket                         : std_logic;                      -- avalon_st_adapter:out_0_startofpacket -> camera_clk_cross:in_startofpacket
+	signal avalon_st_adapter_out_0_endofpacket                           : std_logic;                      -- avalon_st_adapter:out_0_endofpacket -> camera_clk_cross:in_endofpacket
+	signal camera_clk_cross_out_valid                                    : std_logic;                      -- camera_clk_cross:out_valid -> avalon_st_adapter_001:in_0_valid
+	signal camera_clk_cross_out_data                                     : std_logic_vector(31 downto 0);  -- camera_clk_cross:out_data -> avalon_st_adapter_001:in_0_data
+	signal camera_clk_cross_out_ready                                    : std_logic;                      -- avalon_st_adapter_001:in_0_ready -> camera_clk_cross:out_ready
+	signal camera_clk_cross_out_startofpacket                            : std_logic;                      -- camera_clk_cross:out_startofpacket -> avalon_st_adapter_001:in_0_startofpacket
+	signal camera_clk_cross_out_endofpacket                              : std_logic;                      -- camera_clk_cross:out_endofpacket -> avalon_st_adapter_001:in_0_endofpacket
+	signal avalon_st_adapter_001_out_0_valid                             : std_logic;                      -- avalon_st_adapter_001:out_0_valid -> camera_data:avalonst_sink_valid
+	signal avalon_st_adapter_001_out_0_data                              : std_logic_vector(31 downto 0);  -- avalon_st_adapter_001:out_0_data -> camera_data:avalonst_sink_data
+	signal avalon_st_adapter_001_out_0_startofpacket                     : std_logic;                      -- avalon_st_adapter_001:out_0_startofpacket -> camera_data:avalonst_sink_startofpacket
+	signal avalon_st_adapter_001_out_0_endofpacket                       : std_logic;                      -- avalon_st_adapter_001:out_0_endofpacket -> camera_data:avalonst_sink_endofpacket
+	signal rst_controller_reset_out_reset                                : std_logic;                      -- rst_controller:reset_out -> [avalon_st_adapter_001:in_rst_0_reset, irq_mapper_002:reset, mm_interconnect_0:camera_data_reset_in_reset_bridge_in_reset_reset, mm_interconnect_0:fpga_only_master_clk_reset_reset_bridge_in_reset_reset, mm_interconnect_1:hps_only_master_clk_reset_reset_bridge_in_reset_reset, mm_interconnect_1:hps_only_master_master_translator_reset_reset_bridge_in_reset_reset, onchip_memory2_0:reset, rst_controller_reset_out_reset:in, rst_translator:in_reset]
 	signal rst_controller_reset_out_reset_req                            : std_logic;                      -- rst_controller:reset_req -> [onchip_memory2_0:reset_req, rst_translator:reset_req_in]
-	signal rst_controller_001_reset_out_reset                            : std_logic;                      -- rst_controller_001:reset_out -> [mm_interconnect_0:hps_0_h2f_axi_master_agent_clk_reset_reset_bridge_in_reset_reset, mm_interconnect_1:hps_0_f2h_axi_slave_agent_reset_sink_reset_bridge_in_reset_reset]
-	signal hps_0_h2f_reset_reset_n_ports_inv                             : std_logic;                      -- hps_0_h2f_reset_reset_n:inv -> rst_controller_001:reset_in0
-	signal reset_reset_n_ports_inv                                       : std_logic;                      -- reset_reset_n:inv -> [fpga_only_master:clk_reset_reset, hps_only_master:clk_reset_reset, rst_controller:reset_in0]
+	signal rst_controller_001_reset_out_reset                            : std_logic;                      -- rst_controller_001:reset_out -> [avalon_st_adapter:in_rst_0_reset, mm_interconnect_0:line_scan_camera_clk_reset_reset_bridge_in_reset_reset, rst_controller_001_reset_out_reset:in]
+	signal rst_controller_002_reset_out_reset                            : std_logic;                      -- rst_controller_002:reset_out -> [mm_interconnect_0:hps_0_h2f_axi_master_agent_clk_reset_reset_bridge_in_reset_reset, mm_interconnect_1:hps_0_f2h_axi_slave_agent_reset_sink_reset_bridge_in_reset_reset]
+	signal hps_0_h2f_reset_reset_n_ports_inv                             : std_logic;                      -- hps_0_h2f_reset_reset_n:inv -> rst_controller_002:reset_in0
+	signal reset_reset_n_ports_inv                                       : std_logic;                      -- reset_reset_n:inv -> [adc_clk_40Mhz:rst, fpga_only_master:clk_reset_reset, hps_only_master:clk_reset_reset, rst_controller:reset_in0, rst_controller_001:reset_in0]
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_read_ports_inv  : std_logic;                      -- mm_interconnect_0_jtag_uart_avalon_jtag_slave_read:inv -> jtag_uart:av_read_n
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_write_ports_inv : std_logic;                      -- mm_interconnect_0_jtag_uart_avalon_jtag_slave_write:inv -> jtag_uart:av_write_n
 	signal mm_interconnect_0_led_pio_s1_write_ports_inv                  : std_logic;                      -- mm_interconnect_0_led_pio_s1_write:inv -> led_pio:write_n
 	signal mm_interconnect_0_dipsw_pio_s1_write_ports_inv                : std_logic;                      -- mm_interconnect_0_dipsw_pio_s1_write:inv -> dipsw_pio:write_n
 	signal mm_interconnect_0_button_pio_s1_write_ports_inv               : std_logic;                      -- mm_interconnect_0_button_pio_s1_write:inv -> button_pio:write_n
-	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                      -- rst_controller_reset_out_reset:inv -> [button_pio:reset_n, dipsw_pio:reset_n, intr_capturer_0:rst_n, jtag_uart:rst_n, led_pio:reset_n, motor_driver_0:reset_n, sysid_qsys:reset_n]
+	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                      -- rst_controller_reset_out_reset:inv -> [button_pio:reset_n, camera_clk_cross:out_reset_n, camera_data:reset_n, dipsw_pio:reset_n, intr_capturer_0:rst_n, jtag_uart:rst_n, led_pio:reset_n, motor_driver_0:reset_n, sysid_qsys:reset_n]
+	signal rst_controller_001_reset_out_reset_ports_inv                  : std_logic;                      -- rst_controller_001_reset_out_reset:inv -> [camera_clk_cross:in_reset_n, line_scan_camera:reset_reset]
 
 begin
+
+	adc_clk_40mhz : component soc_system_adc_clk_40Mhz
+		port map (
+			refclk   => clk_clk,                   --  refclk.clk
+			rst      => reset_reset_n_ports_inv,   --   reset.reset
+			outclk_0 => adc_clk_40mhz_outclk0_clk, -- outclk0.clk
+			locked   => open                       -- (terminated)
+		);
 
 	button_pio : component soc_system_button_pio
 		port map (
@@ -949,7 +1177,66 @@ begin
 			chipselect => mm_interconnect_0_button_pio_s1_chipselect,      --                    .chipselect
 			readdata   => mm_interconnect_0_button_pio_s1_readdata,        --                    .readdata
 			in_port    => button_pio_external_connection_export,           -- external_connection.export
-			irq        => irq_mapper_receiver1_irq                         --                 irq.irq
+			irq        => irq_mapper_receiver2_irq                         --                 irq.irq
+		);
+
+	camera_clk_cross : component altera_avalon_dc_fifo
+		generic map (
+			SYMBOLS_PER_BEAT   => 1,
+			BITS_PER_SYMBOL    => 32,
+			FIFO_DEPTH         => 2,
+			CHANNEL_WIDTH      => 0,
+			ERROR_WIDTH        => 0,
+			USE_PACKETS        => 1,
+			USE_IN_FILL_LEVEL  => 0,
+			USE_OUT_FILL_LEVEL => 0,
+			WR_SYNC_DEPTH      => 3,
+			RD_SYNC_DEPTH      => 3
+		)
+		port map (
+			in_clk            => adc_clk_40mhz_outclk0_clk,                    --        in_clk.clk
+			in_reset_n        => rst_controller_001_reset_out_reset_ports_inv, --  in_clk_reset.reset_n
+			out_clk           => clk_clk,                                      --       out_clk.clk
+			out_reset_n       => rst_controller_reset_out_reset_ports_inv,     -- out_clk_reset.reset_n
+			in_data           => avalon_st_adapter_out_0_data,                 --            in.data
+			in_valid          => avalon_st_adapter_out_0_valid,                --              .valid
+			in_ready          => avalon_st_adapter_out_0_ready,                --              .ready
+			in_startofpacket  => avalon_st_adapter_out_0_startofpacket,        --              .startofpacket
+			in_endofpacket    => avalon_st_adapter_out_0_endofpacket,          --              .endofpacket
+			out_data          => camera_clk_cross_out_data,                    --           out.data
+			out_valid         => camera_clk_cross_out_valid,                   --              .valid
+			out_ready         => camera_clk_cross_out_ready,                   --              .ready
+			out_startofpacket => camera_clk_cross_out_startofpacket,           --              .startofpacket
+			out_endofpacket   => camera_clk_cross_out_endofpacket,             --              .endofpacket
+			in_csr_address    => '0',                                          --   (terminated)
+			in_csr_read       => '0',                                          --   (terminated)
+			in_csr_write      => '0',                                          --   (terminated)
+			in_csr_readdata   => open,                                         --   (terminated)
+			in_csr_writedata  => "00000000000000000000000000000000",           --   (terminated)
+			out_csr_address   => '0',                                          --   (terminated)
+			out_csr_read      => '0',                                          --   (terminated)
+			out_csr_write     => '0',                                          --   (terminated)
+			out_csr_readdata  => open,                                         --   (terminated)
+			out_csr_writedata => "00000000000000000000000000000000"            --   (terminated)
+		);
+
+	camera_data : component soc_system_camera_data
+		port map (
+			wrclock                       => clk_clk,                                        --   clk_in.clk
+			reset_n                       => rst_controller_reset_out_reset_ports_inv,       -- reset_in.reset_n
+			avalonst_sink_valid           => avalon_st_adapter_001_out_0_valid,              --       in.valid
+			avalonst_sink_data            => avalon_st_adapter_001_out_0_data,               --         .data
+			avalonst_sink_startofpacket   => avalon_st_adapter_001_out_0_startofpacket,      --         .startofpacket
+			avalonst_sink_endofpacket     => avalon_st_adapter_001_out_0_endofpacket,        --         .endofpacket
+			avalonmm_read_slave_readdata  => mm_interconnect_0_camera_data_out_readdata,     --      out.readdata
+			avalonmm_read_slave_read      => mm_interconnect_0_camera_data_out_read,         --         .read
+			avalonmm_read_slave_address   => mm_interconnect_0_camera_data_out_address(0),   --         .address
+			wrclk_control_slave_address   => mm_interconnect_0_camera_data_in_csr_address,   --   in_csr.address
+			wrclk_control_slave_read      => mm_interconnect_0_camera_data_in_csr_read,      --         .read
+			wrclk_control_slave_writedata => mm_interconnect_0_camera_data_in_csr_writedata, --         .writedata
+			wrclk_control_slave_write     => mm_interconnect_0_camera_data_in_csr_write,     --         .write
+			wrclk_control_slave_readdata  => mm_interconnect_0_camera_data_in_csr_readdata,  --         .readdata
+			wrclk_control_slave_irq       => irq_mapper_receiver0_irq                        --   in_irq.irq
 		);
 
 	dipsw_pio : component soc_system_dipsw_pio
@@ -962,7 +1249,7 @@ begin
 			chipselect => mm_interconnect_0_dipsw_pio_s1_chipselect,      --                    .chipselect
 			readdata   => mm_interconnect_0_dipsw_pio_s1_readdata,        --                    .readdata
 			in_port    => dipsw_pio_external_connection_export,           -- external_connection.export
-			irq        => irq_mapper_receiver2_irq                        --                 irq.irq
+			irq        => irq_mapper_receiver3_irq                        --                 irq.irq
 		);
 
 	fpga_only_master : component soc_system_fpga_only_master
@@ -1221,7 +1508,7 @@ begin
 			av_write_n     => mm_interconnect_0_jtag_uart_avalon_jtag_slave_write_ports_inv, --                  .write_n
 			av_writedata   => mm_interconnect_0_jtag_uart_avalon_jtag_slave_writedata,       --                  .writedata
 			av_waitrequest => mm_interconnect_0_jtag_uart_avalon_jtag_slave_waitrequest,     --                  .waitrequest
-			av_irq         => irq_mapper_receiver0_irq                                       --               irq.irq
+			av_irq         => irq_mapper_receiver1_irq                                       --               irq.irq
 		);
 
 	led_pio : component soc_system_led_pio
@@ -1234,6 +1521,28 @@ begin
 			chipselect => mm_interconnect_0_led_pio_s1_chipselect,      --                    .chipselect
 			readdata   => mm_interconnect_0_led_pio_s1_readdata,        --                    .readdata
 			out_port   => led_pio_external_connection_export            -- external_connection.export
+		);
+
+	line_scan_camera : component line_scan_camera_st
+		port map (
+			data_out_endofpacket   => line_scan_camera_data_out_endofpacket,                  --  data_out.endofpacket
+			data_out_data          => line_scan_camera_data_out_data,                         --          .data
+			data_out_startofpacket => line_scan_camera_data_out_startofpacket,                --          .startofpacket
+			data_out_valid         => line_scan_camera_data_out_valid,                        --          .valid
+			control_address        => mm_interconnect_0_line_scan_camera_control_address,     --   control.address
+			control_read           => mm_interconnect_0_line_scan_camera_control_read,        --          .read
+			control_readdata       => mm_interconnect_0_line_scan_camera_control_readdata,    --          .readdata
+			control_write          => mm_interconnect_0_line_scan_camera_control_write,       --          .write
+			control_writedata      => mm_interconnect_0_line_scan_camera_control_writedata,   --          .writedata
+			control_waitrequest    => mm_interconnect_0_line_scan_camera_control_waitrequest, --          .waitrequest
+			adc_convst             => camera_pins_adc_convst_pin,                             --      pins.adc_convst_pin
+			adc_sck                => camera_pins_adc_sck_pin,                                --          .adc_sck_pin
+			adc_sdi                => camera_pins_adc_sdi_pin,                                --          .adc_sdi_pin
+			adc_sdo                => camera_pins_adc_sdo_pin,                                --          .adc_sdo_pin
+			camera_clk             => camera_pins_camera_clk_pin,                             --          .camera_clk_pin
+			camera_si              => camera_pins_camera_si_pin,                              --          .camera_si_pin
+			reset_reset            => rst_controller_001_reset_out_reset_ports_inv,           -- clk_reset.reset_n
+			clock_clk              => adc_clk_40mhz_outclk0_clk                               --       clk.clk
 		);
 
 	motor_driver_0 : component motor_driver_avalon
@@ -1352,10 +1661,12 @@ begin
 			hps_0_h2f_lw_axi_master_rlast                                    => hps_0_h2f_lw_axi_master_rlast,                             --                                                           .rlast
 			hps_0_h2f_lw_axi_master_rvalid                                   => hps_0_h2f_lw_axi_master_rvalid,                            --                                                           .rvalid
 			hps_0_h2f_lw_axi_master_rready                                   => hps_0_h2f_lw_axi_master_rready,                            --                                                           .rready
+			adc_clk_40Mhz_outclk0_clk                                        => adc_clk_40mhz_outclk0_clk,                                 --                                      adc_clk_40Mhz_outclk0.clk
 			clk_0_clk_clk                                                    => clk_clk,                                                   --                                                  clk_0_clk.clk
+			camera_data_reset_in_reset_bridge_in_reset_reset                 => rst_controller_reset_out_reset,                            --                 camera_data_reset_in_reset_bridge_in_reset.reset
 			fpga_only_master_clk_reset_reset_bridge_in_reset_reset           => rst_controller_reset_out_reset,                            --           fpga_only_master_clk_reset_reset_bridge_in_reset.reset
-			hps_0_h2f_axi_master_agent_clk_reset_reset_bridge_in_reset_reset => rst_controller_001_reset_out_reset,                        -- hps_0_h2f_axi_master_agent_clk_reset_reset_bridge_in_reset.reset
-			onchip_memory2_0_reset1_reset_bridge_in_reset_reset              => rst_controller_reset_out_reset,                            --              onchip_memory2_0_reset1_reset_bridge_in_reset.reset
+			hps_0_h2f_axi_master_agent_clk_reset_reset_bridge_in_reset_reset => rst_controller_002_reset_out_reset,                        -- hps_0_h2f_axi_master_agent_clk_reset_reset_bridge_in_reset.reset
+			line_scan_camera_clk_reset_reset_bridge_in_reset_reset           => rst_controller_001_reset_out_reset,                        --           line_scan_camera_clk_reset_reset_bridge_in_reset.reset
 			fpga_only_master_master_address                                  => fpga_only_master_master_address,                           --                                    fpga_only_master_master.address
 			fpga_only_master_master_waitrequest                              => fpga_only_master_master_waitrequest,                       --                                                           .waitrequest
 			fpga_only_master_master_byteenable                               => fpga_only_master_master_byteenable,                        --                                                           .byteenable
@@ -1369,6 +1680,14 @@ begin
 			button_pio_s1_readdata                                           => mm_interconnect_0_button_pio_s1_readdata,                  --                                                           .readdata
 			button_pio_s1_writedata                                          => mm_interconnect_0_button_pio_s1_writedata,                 --                                                           .writedata
 			button_pio_s1_chipselect                                         => mm_interconnect_0_button_pio_s1_chipselect,                --                                                           .chipselect
+			camera_data_in_csr_address                                       => mm_interconnect_0_camera_data_in_csr_address,              --                                         camera_data_in_csr.address
+			camera_data_in_csr_write                                         => mm_interconnect_0_camera_data_in_csr_write,                --                                                           .write
+			camera_data_in_csr_read                                          => mm_interconnect_0_camera_data_in_csr_read,                 --                                                           .read
+			camera_data_in_csr_readdata                                      => mm_interconnect_0_camera_data_in_csr_readdata,             --                                                           .readdata
+			camera_data_in_csr_writedata                                     => mm_interconnect_0_camera_data_in_csr_writedata,            --                                                           .writedata
+			camera_data_out_address                                          => mm_interconnect_0_camera_data_out_address,                 --                                            camera_data_out.address
+			camera_data_out_read                                             => mm_interconnect_0_camera_data_out_read,                    --                                                           .read
+			camera_data_out_readdata                                         => mm_interconnect_0_camera_data_out_readdata,                --                                                           .readdata
 			dipsw_pio_s1_address                                             => mm_interconnect_0_dipsw_pio_s1_address,                    --                                               dipsw_pio_s1.address
 			dipsw_pio_s1_write                                               => mm_interconnect_0_dipsw_pio_s1_write,                      --                                                           .write
 			dipsw_pio_s1_readdata                                            => mm_interconnect_0_dipsw_pio_s1_readdata,                   --                                                           .readdata
@@ -1389,6 +1708,12 @@ begin
 			led_pio_s1_readdata                                              => mm_interconnect_0_led_pio_s1_readdata,                     --                                                           .readdata
 			led_pio_s1_writedata                                             => mm_interconnect_0_led_pio_s1_writedata,                    --                                                           .writedata
 			led_pio_s1_chipselect                                            => mm_interconnect_0_led_pio_s1_chipselect,                   --                                                           .chipselect
+			line_scan_camera_control_address                                 => mm_interconnect_0_line_scan_camera_control_address,        --                                   line_scan_camera_control.address
+			line_scan_camera_control_write                                   => mm_interconnect_0_line_scan_camera_control_write,          --                                                           .write
+			line_scan_camera_control_read                                    => mm_interconnect_0_line_scan_camera_control_read,           --                                                           .read
+			line_scan_camera_control_readdata                                => mm_interconnect_0_line_scan_camera_control_readdata,       --                                                           .readdata
+			line_scan_camera_control_writedata                               => mm_interconnect_0_line_scan_camera_control_writedata,      --                                                           .writedata
+			line_scan_camera_control_waitrequest                             => mm_interconnect_0_line_scan_camera_control_waitrequest,    --                                                           .waitrequest
 			motor_driver_0_avs_s0_address                                    => mm_interconnect_0_motor_driver_0_avs_s0_address,           --                                      motor_driver_0_avs_s0.address
 			motor_driver_0_avs_s0_write                                      => mm_interconnect_0_motor_driver_0_avs_s0_write,             --                                                           .write
 			motor_driver_0_avs_s0_read                                       => mm_interconnect_0_motor_driver_0_avs_s0_read,              --                                                           .read
@@ -1447,7 +1772,7 @@ begin
 			hps_0_f2h_axi_slave_rvalid                                          => mm_interconnect_1_hps_0_f2h_axi_slave_rvalid,  --                                                              .rvalid
 			hps_0_f2h_axi_slave_rready                                          => mm_interconnect_1_hps_0_f2h_axi_slave_rready,  --                                                              .rready
 			clk_0_clk_clk                                                       => clk_clk,                                       --                                                     clk_0_clk.clk
-			hps_0_f2h_axi_slave_agent_reset_sink_reset_bridge_in_reset_reset    => rst_controller_001_reset_out_reset,            --    hps_0_f2h_axi_slave_agent_reset_sink_reset_bridge_in_reset.reset
+			hps_0_f2h_axi_slave_agent_reset_sink_reset_bridge_in_reset_reset    => rst_controller_002_reset_out_reset,            --    hps_0_f2h_axi_slave_agent_reset_sink_reset_bridge_in_reset.reset
 			hps_only_master_clk_reset_reset_bridge_in_reset_reset               => rst_controller_reset_out_reset,                --               hps_only_master_clk_reset_reset_bridge_in_reset.reset
 			hps_only_master_master_translator_reset_reset_bridge_in_reset_reset => rst_controller_reset_out_reset,                -- hps_only_master_master_translator_reset_reset_bridge_in_reset.reset
 			hps_only_master_master_address                                      => hps_only_master_master_address,                --                                        hps_only_master_master.address
@@ -1467,6 +1792,7 @@ begin
 			receiver0_irq => irq_mapper_receiver0_irq, -- receiver0.irq
 			receiver1_irq => irq_mapper_receiver1_irq, -- receiver1.irq
 			receiver2_irq => irq_mapper_receiver2_irq, -- receiver2.irq
+			receiver3_irq => irq_mapper_receiver3_irq, -- receiver3.irq
 			sender_irq    => hps_0_f2h_irq0_irq        --    sender.irq
 		);
 
@@ -1484,7 +1810,74 @@ begin
 			receiver0_irq => irq_mapper_receiver0_irq,               -- receiver0.irq
 			receiver1_irq => irq_mapper_receiver1_irq,               -- receiver1.irq
 			receiver2_irq => irq_mapper_receiver2_irq,               -- receiver2.irq
+			receiver3_irq => irq_mapper_receiver3_irq,               -- receiver3.irq
 			sender_irq    => intr_capturer_0_interrupt_receiver_irq  --    sender.irq
+		);
+
+	avalon_st_adapter : component soc_system_avalon_st_adapter
+		generic map (
+			inBitsPerSymbol => 32,
+			inUsePackets    => 1,
+			inDataWidth     => 32,
+			inChannelWidth  => 0,
+			inErrorWidth    => 0,
+			inUseEmptyPort  => 0,
+			inUseValid      => 1,
+			inUseReady      => 0,
+			inReadyLatency  => 0,
+			outDataWidth    => 32,
+			outChannelWidth => 0,
+			outErrorWidth   => 0,
+			outUseEmptyPort => 0,
+			outUseValid     => 1,
+			outUseReady     => 1,
+			outReadyLatency => 0
+		)
+		port map (
+			in_clk_0_clk        => adc_clk_40mhz_outclk0_clk,               -- in_clk_0.clk
+			in_rst_0_reset      => rst_controller_001_reset_out_reset,      -- in_rst_0.reset
+			in_0_data           => line_scan_camera_data_out_data,          --     in_0.data
+			in_0_valid          => line_scan_camera_data_out_valid,         --         .valid
+			in_0_startofpacket  => line_scan_camera_data_out_startofpacket, --         .startofpacket
+			in_0_endofpacket    => line_scan_camera_data_out_endofpacket,   --         .endofpacket
+			out_0_data          => avalon_st_adapter_out_0_data,            --    out_0.data
+			out_0_valid         => avalon_st_adapter_out_0_valid,           --         .valid
+			out_0_ready         => avalon_st_adapter_out_0_ready,           --         .ready
+			out_0_startofpacket => avalon_st_adapter_out_0_startofpacket,   --         .startofpacket
+			out_0_endofpacket   => avalon_st_adapter_out_0_endofpacket      --         .endofpacket
+		);
+
+	avalon_st_adapter_001 : component soc_system_avalon_st_adapter_001
+		generic map (
+			inBitsPerSymbol => 32,
+			inUsePackets    => 1,
+			inDataWidth     => 32,
+			inChannelWidth  => 0,
+			inErrorWidth    => 0,
+			inUseEmptyPort  => 0,
+			inUseValid      => 1,
+			inUseReady      => 1,
+			inReadyLatency  => 0,
+			outDataWidth    => 32,
+			outChannelWidth => 0,
+			outErrorWidth   => 0,
+			outUseEmptyPort => 0,
+			outUseValid     => 1,
+			outUseReady     => 0,
+			outReadyLatency => 0
+		)
+		port map (
+			in_clk_0_clk        => clk_clk,                                   -- in_clk_0.clk
+			in_rst_0_reset      => rst_controller_reset_out_reset,            -- in_rst_0.reset
+			in_0_data           => camera_clk_cross_out_data,                 --     in_0.data
+			in_0_valid          => camera_clk_cross_out_valid,                --         .valid
+			in_0_ready          => camera_clk_cross_out_ready,                --         .ready
+			in_0_startofpacket  => camera_clk_cross_out_startofpacket,        --         .startofpacket
+			in_0_endofpacket    => camera_clk_cross_out_endofpacket,          --         .endofpacket
+			out_0_data          => avalon_st_adapter_001_out_0_data,          --    out_0.data
+			out_0_valid         => avalon_st_adapter_001_out_0_valid,         --         .valid
+			out_0_startofpacket => avalon_st_adapter_001_out_0_startofpacket, --         .startofpacket
+			out_0_endofpacket   => avalon_st_adapter_001_out_0_endofpacket    --         .endofpacket
 		);
 
 	rst_controller : component soc_system_rst_controller
@@ -1580,9 +1973,74 @@ begin
 			ADAPT_RESET_REQUEST       => 0
 		)
 		port map (
+			reset_in0      => reset_reset_n_ports_inv,            -- reset_in0.reset
+			clk            => adc_clk_40mhz_outclk0_clk,          --       clk.clk
+			reset_out      => rst_controller_001_reset_out_reset, -- reset_out.reset
+			reset_req      => open,                               -- (terminated)
+			reset_req_in0  => '0',                                -- (terminated)
+			reset_in1      => '0',                                -- (terminated)
+			reset_req_in1  => '0',                                -- (terminated)
+			reset_in2      => '0',                                -- (terminated)
+			reset_req_in2  => '0',                                -- (terminated)
+			reset_in3      => '0',                                -- (terminated)
+			reset_req_in3  => '0',                                -- (terminated)
+			reset_in4      => '0',                                -- (terminated)
+			reset_req_in4  => '0',                                -- (terminated)
+			reset_in5      => '0',                                -- (terminated)
+			reset_req_in5  => '0',                                -- (terminated)
+			reset_in6      => '0',                                -- (terminated)
+			reset_req_in6  => '0',                                -- (terminated)
+			reset_in7      => '0',                                -- (terminated)
+			reset_req_in7  => '0',                                -- (terminated)
+			reset_in8      => '0',                                -- (terminated)
+			reset_req_in8  => '0',                                -- (terminated)
+			reset_in9      => '0',                                -- (terminated)
+			reset_req_in9  => '0',                                -- (terminated)
+			reset_in10     => '0',                                -- (terminated)
+			reset_req_in10 => '0',                                -- (terminated)
+			reset_in11     => '0',                                -- (terminated)
+			reset_req_in11 => '0',                                -- (terminated)
+			reset_in12     => '0',                                -- (terminated)
+			reset_req_in12 => '0',                                -- (terminated)
+			reset_in13     => '0',                                -- (terminated)
+			reset_req_in13 => '0',                                -- (terminated)
+			reset_in14     => '0',                                -- (terminated)
+			reset_req_in14 => '0',                                -- (terminated)
+			reset_in15     => '0',                                -- (terminated)
+			reset_req_in15 => '0'                                 -- (terminated)
+		);
+
+	rst_controller_002 : component soc_system_rst_controller_001
+		generic map (
+			NUM_RESET_INPUTS          => 1,
+			OUTPUT_RESET_SYNC_EDGES   => "deassert",
+			SYNC_DEPTH                => 2,
+			RESET_REQUEST_PRESENT     => 0,
+			RESET_REQ_WAIT_TIME       => 1,
+			MIN_RST_ASSERTION_TIME    => 3,
+			RESET_REQ_EARLY_DSRT_TIME => 1,
+			USE_RESET_REQUEST_IN0     => 0,
+			USE_RESET_REQUEST_IN1     => 0,
+			USE_RESET_REQUEST_IN2     => 0,
+			USE_RESET_REQUEST_IN3     => 0,
+			USE_RESET_REQUEST_IN4     => 0,
+			USE_RESET_REQUEST_IN5     => 0,
+			USE_RESET_REQUEST_IN6     => 0,
+			USE_RESET_REQUEST_IN7     => 0,
+			USE_RESET_REQUEST_IN8     => 0,
+			USE_RESET_REQUEST_IN9     => 0,
+			USE_RESET_REQUEST_IN10    => 0,
+			USE_RESET_REQUEST_IN11    => 0,
+			USE_RESET_REQUEST_IN12    => 0,
+			USE_RESET_REQUEST_IN13    => 0,
+			USE_RESET_REQUEST_IN14    => 0,
+			USE_RESET_REQUEST_IN15    => 0,
+			ADAPT_RESET_REQUEST       => 0
+		)
+		port map (
 			reset_in0      => hps_0_h2f_reset_reset_n_ports_inv,  -- reset_in0.reset
 			clk            => clk_clk,                            --       clk.clk
-			reset_out      => rst_controller_001_reset_out_reset, -- reset_out.reset
+			reset_out      => rst_controller_002_reset_out_reset, -- reset_out.reset
 			reset_req      => open,                               -- (terminated)
 			reset_req_in0  => '0',                                -- (terminated)
 			reset_in1      => '0',                                -- (terminated)
@@ -1632,6 +2090,8 @@ begin
 	mm_interconnect_0_button_pio_s1_write_ports_inv <= not mm_interconnect_0_button_pio_s1_write;
 
 	rst_controller_reset_out_reset_ports_inv <= not rst_controller_reset_out_reset;
+
+	rst_controller_001_reset_out_reset_ports_inv <= not rst_controller_001_reset_out_reset;
 
 	hps_0_h2f_reset_reset_n <= hps_0_h2f_reset_reset;
 

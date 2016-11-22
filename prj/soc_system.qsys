@@ -1396,7 +1396,7 @@
    version="15.1"
    enabled="1">
   <parameter name="allowInSystemMemoryContentEditor" value="false" />
-  <parameter name="autoInitializationFileName">$${FILENAME}_onchip_memory2_0</parameter>
+  <parameter name="autoInitializationFileName">soc_system_onchip_memory2_0</parameter>
   <parameter name="blockType" value="AUTO" />
   <parameter name="copyInitFile" value="false" />
   <parameter name="dataWidth" value="64" />
@@ -1461,6 +1461,15 @@
    end="motor_driver_0.avs_s0">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00040000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="hps_0.h2f_lw_axi_master"
+   end="line_scan_camera.control">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00050000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -1533,6 +1542,15 @@
    end="motor_driver_0.avs_s0">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00040000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="fpga_only_master.master"
+   end="line_scan_camera.control">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00050000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection

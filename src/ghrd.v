@@ -237,6 +237,14 @@ module ghrd(
      // Motor drivers
     .motor_driver_0_pins_pin_a             (GPIO_0[0]),             //            motor_driver_0_pins.pin_a
 		.motor_driver_0_pins_pin_b             (GPIO_0[1]),             //                               .pin_b
+ 
+    // Camera pins
+    .camera_pins_adc_convst_pin            (ADC_CONVST),            //                    camera_pins.adc_convst_pin
+		.camera_pins_adc_sck_pin               (ADC_SCK),               //                               .adc_sck_pin
+		.camera_pins_adc_sdi_pin               (ADC_SDI),               //                               .adc_sdi_pin
+		.camera_pins_adc_sdo_pin               (ADC_SDO),               //                               .adc_sdo_pin
+		.camera_pins_camera_clk_pin            (GPIO_0[3]),            //                               .camera_clk_pin
+		.camera_pins_camera_si_pin             (GPIO_0[4]),             //                               .camera_si_pin
  );
 
 // Debounce logic to clean out glitches within 1ms

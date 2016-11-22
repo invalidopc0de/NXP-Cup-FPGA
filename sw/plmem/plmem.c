@@ -34,8 +34,8 @@ static char args_doc[] = "";
 /* The options we understand. */
 static struct argp_option options[] = {
   {"verbose",  'v', 0,      0,  "Produce verbose output" },
-  {"addr",     'a', 0,      0,  "PL address" },
-  {"data",     'd', 0,      0,  "Data value to write" },
+  {"addr",     'a', "ADDR", 0,  "PL address" },
+  {"data",     'd', "DATA", 0,  "Data value to write" },
   { 0 }
 };
 
@@ -99,12 +99,25 @@ int write_to_fpga(uint32_t addr, uint32_t data, int verbose)
 	int fd;
 	void *full_addr;
 
+
+
 	// map the address space for the LED registers into user space so we can interact with them.
 	// we'll actually map in the entire CSR span of the HPS since we want to access various registers within that span
+
+	if (verbose)
+	{
+		printf("Attempting to write 0x%x to address 0x%x", data, addr);
+		printf("Opening /dev/mem...\r\n");
+	}
 
 	if( ( fd = open( "/dev/mem", ( O_RDWR | O_SYNC ) ) ) == -1 ) {
 		printf( "ERROR: could not open \"/dev/mem\"...\n" );
 		return( -1 );
+	}
+
+	if (verbose)
+	{
+		printf("Mapping /dev/mem...\r\n");
 	}
 
 	virtual_base = mmap( NULL, HW_REGS_SPAN, ( PROT_READ | PROT_WRITE ), MAP_SHARED, fd, HW_REGS_BASE );

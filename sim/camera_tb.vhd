@@ -46,9 +46,9 @@ BEGIN
     -- Stimulus process
     stim_proc: process
     begin  
-        rst <= '1';
-        wait for clk_period*5;
         rst <= '0';
+        wait for clk_period*5;
+        rst <= '1';
 
         -- Reset first 
         wait until dout.adc_capture = '1';

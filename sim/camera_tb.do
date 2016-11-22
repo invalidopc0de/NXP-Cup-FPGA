@@ -1,7 +1,7 @@
 vlib work
 set worklib work
 vcom ../src/nxp_fpga_types.vhd 
-vcom ../src/camera.vhd
+vcom ../src/line_scan_camera/camera.vhd
 vcom camera_tb.vhd
 vsim camera_tb
 

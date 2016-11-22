@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/line_scan_camera_st.vhd"
+   type="VHDL"
+   library="line_scan_camera" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/LTC2308.v"
+   type="VERILOG"
+   library="line_scan_camera" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/camera.vhd"
+   type="VHDL"
+   library="line_scan_camera" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system_led_pio.vhd"
+   type="VHDL"
+   library="led_pio" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system_jtag_uart.vhd"
+   type="VHDL"
+   library="jtag_uart" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/intr_capturer.vho"
+   type="VHDL"
+   library="intr_capturer_0" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system_hps_0.vhd"
+   type="VHDL"
+   library="hps_0" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system_fpga_only_master.vhd"
+   type="VHDL"
+   library="fpga_only_master" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system_dipsw_pio.vhd"
+   type="VHDL"
+   library="dipsw_pio" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system_camera_data.vhd"
+   type="VHDL"
+   library="camera_data" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system_camera_clk_cross.vho"
+   type="VHDL"
+   library="camera_clk_cross" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system_button_pio.vhd"
+   type="VHDL"
+   library="button_pio" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system_adc_clk_40Mhz.vho"
+   type="VHDL"
+   library="adc_clk_40Mhz" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0007_vhdl_pkg.vhd"
+   type="VHDL"
+   library="soc_system_inst_motor_driver_0_pins_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0007.vhd"
+   type="VHDL"
+   library="soc_system_inst_motor_driver_0_pins_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0006_vhdl_pkg.vhd"
+   type="VHDL"
+   library="soc_system_inst_memory_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0006.vhd"
+   type="VHDL"
+   library="soc_system_inst_memory_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0005_vhdl_pkg.vhd"
+   type="VHDL"
+   library="soc_system_inst_led_pio_external_connection_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0005.vhd"
+   type="VHDL"
+   library="soc_system_inst_led_pio_external_connection_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0004_vhdl_pkg.vhd"
+   type="VHDL"
+   library="soc_system_inst_hps_0_hps_io_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0004.vhd"
+   type="VHDL"
+   library="soc_system_inst_hps_0_hps_io_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0003_vhdl_pkg.vhd"
+   type="VHDL"
+   library="soc_system_inst_hps_0_f2h_stm_hw_events_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0003.vhd"
+   type="VHDL"
+   library="soc_system_inst_hps_0_f2h_stm_hw_events_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_avalon_reset_source.vhd"
+   type="VHDL"
+   library="soc_system_inst_hps_0_f2h_cold_reset_req_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_avalon_clock_source.vhd"
+   type="VHDL"
+   library="soc_system_inst_clk_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0002_vhdl_pkg.vhd"
+   type="VHDL"
+   library="soc_system_inst_camera_pins_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_0002.vhd"
+   type="VHDL"
+   library="soc_system_inst_camera_pins_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm_vhdl_pkg.vhd"
+   type="VHDL"
+   library="soc_system_inst_button_pio_external_connection_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/altera_conduit_bfm.vhd"
+   type="VHDL"
+   library="soc_system_inst_button_pio_external_connection_bfm" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system.vhd"
+   type="VHDL"
+   library="soc_system_inst" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system_rst_controller.vhd"
+   type="VHDL"
+   library="soc_system_inst" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/submodules/soc_system_rst_controller_001.vhd"
+   type="VHDL"
+   library="soc_system_inst" />
+ <file
+   path="soc_system/testbench/soc_system_tb/simulation/soc_system_tb.vhd"
+   type="VHDL" />
+ <topLevel name="soc_system_tb" />
+ <deviceFamily name="cyclonev" />
+ <modelMap
+   controllerPath="soc_system_tb.soc_system_inst.hps_0"
+   modelPath="soc_system_tb.soc_system_inst.hps_0" />
+ <modelMap
+   controllerPath="soc_system_tb.soc_system_inst.hps_0.fpga_interfaces"
+   modelPath="soc_system_tb.soc_system_inst.hps_0.fpga_interfaces" />
+ <modelMap
+   controllerPath="soc_system_tb.soc_system_inst.hps_0.hps_io"
+   modelPath="soc_system_tb.soc_system_inst.hps_0.hps_io" />
+ <modelMap
+   controllerPath="soc_system_tb.soc_system_inst.onchip_memory2_0"
+   modelPath="soc_system_tb.soc_system_inst.onchip_memory2_0" />
+</simPackage>

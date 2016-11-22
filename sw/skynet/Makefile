@@ -8,6 +8,7 @@ LDFLAGS =  -g -Wall
 CC = $(CROSS_COMPILE)gcc
 ARCH= arm
 
+all: build
 
 build: $(TARGET)
 $(TARGET): main.o 

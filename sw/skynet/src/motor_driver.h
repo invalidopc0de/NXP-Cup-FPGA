@@ -2,6 +2,7 @@
 #define _MOTOR_DRIVER_H_
 
 #include "hps_0.h"
+#include "stdint.h"
 
 /** MOTOR_DRIVER - Register Layout Typedef */
 typedef struct {
@@ -10,5 +11,7 @@ typedef struct {
 } MOTOR_DRIVER_Type;
 
 #define MOTOR(base)    ((MOTOR_DRIVER_Type *) (base))
+
+void SetDutyCycle(void* base, uint32_t dutyCycle, uint32_t frequency);
 
 #endif
