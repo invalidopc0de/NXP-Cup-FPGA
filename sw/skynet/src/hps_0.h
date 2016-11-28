@@ -64,7 +64,7 @@
 #define SYSID_QSYS_SPAN 8
 #define SYSID_QSYS_END 0x10007
 #define SYSID_QSYS_ID 2899645186
-#define SYSID_QSYS_TIMESTAMP 1479267349
+#define SYSID_QSYS_TIMESTAMP 1480195332
 
 /*
  * Macros for device 'led_pio', class 'altera_avalon_pio'
@@ -157,26 +157,37 @@
 #define JTAG_UART_WRITE_THRESHOLD 8
 
 /*
- * Macros for device 'motor_driver_0', class 'pwm_motor_driver'
- * The macros are prefixed with 'MOTOR_DRIVER_0_'.
+ * Macros for device 'motor_driver_a', class 'pwm_motor_driver'
+ * The macros are prefixed with 'MOTOR_DRIVER_A_'.
  * The prefix is the slave descriptor.
  */
-#define MOTOR_DRIVER_0_COMPONENT_TYPE pwm_motor_driver
-#define MOTOR_DRIVER_0_COMPONENT_NAME motor_driver_0
-#define MOTOR_DRIVER_0_BASE 0x40000
-#define MOTOR_DRIVER_0_SPAN 1024
-#define MOTOR_DRIVER_0_END 0x403ff
+#define MOTOR_DRIVER_A_COMPONENT_TYPE pwm_motor_driver
+#define MOTOR_DRIVER_A_COMPONENT_NAME motor_driver_a
+#define MOTOR_DRIVER_A_BASE 0x40000
+#define MOTOR_DRIVER_A_SPAN 1024
+#define MOTOR_DRIVER_A_END 0x403ff
 
 /*
- * Macros for device 'line_scan_camera', class 'line_scan_camera'
- * The macros are prefixed with 'LINE_SCAN_CAMERA_'.
+ * Macros for device 'motor_driver_b', class 'pwm_motor_driver'
+ * The macros are prefixed with 'MOTOR_DRIVER_B_'.
  * The prefix is the slave descriptor.
  */
-#define LINE_SCAN_CAMERA_COMPONENT_TYPE line_scan_camera
-#define LINE_SCAN_CAMERA_COMPONENT_NAME line_scan_camera
-#define LINE_SCAN_CAMERA_BASE 0x50000
-#define LINE_SCAN_CAMERA_SPAN 1024
-#define LINE_SCAN_CAMERA_END 0x503ff
+#define MOTOR_DRIVER_B_COMPONENT_TYPE pwm_motor_driver
+#define MOTOR_DRIVER_B_COMPONENT_NAME motor_driver_b
+#define MOTOR_DRIVER_B_BASE 0x40400
+#define MOTOR_DRIVER_B_SPAN 1024
+#define MOTOR_DRIVER_B_END 0x407ff
+
+/*
+ * Macros for device 'servo_driver', class 'pwm_motor_driver'
+ * The macros are prefixed with 'SERVO_DRIVER_'.
+ * The prefix is the slave descriptor.
+ */
+#define SERVO_DRIVER_COMPONENT_TYPE pwm_motor_driver
+#define SERVO_DRIVER_COMPONENT_NAME servo_driver
+#define SERVO_DRIVER_BASE 0x40800
+#define SERVO_DRIVER_SPAN 1024
+#define SERVO_DRIVER_END 0x40bff
 
 /*
  * Macros for device 'camera_data_out', class 'altera_avalon_fifo'
@@ -190,17 +201,17 @@
 #define CAMERA_DATA_OUT_END 0x60007
 #define CAMERA_DATA_OUT_AVALONMM_AVALONMM_DATA_WIDTH 32
 #define CAMERA_DATA_OUT_AVALONMM_AVALONST_DATA_WIDTH 32
-#define CAMERA_DATA_OUT_BITS_PER_SYMBOL 32
+#define CAMERA_DATA_OUT_BITS_PER_SYMBOL 8
 #define CAMERA_DATA_OUT_CHANNEL_WIDTH 0
 #define CAMERA_DATA_OUT_ERROR_WIDTH 0
 #define CAMERA_DATA_OUT_FIFO_DEPTH 128
 #define CAMERA_DATA_OUT_SINGLE_CLOCK_MODE 1
-#define CAMERA_DATA_OUT_SYMBOLS_PER_BEAT 1
+#define CAMERA_DATA_OUT_SYMBOLS_PER_BEAT 4
 #define CAMERA_DATA_OUT_USE_AVALONMM_READ_SLAVE 1
 #define CAMERA_DATA_OUT_USE_AVALONMM_WRITE_SLAVE 0
 #define CAMERA_DATA_OUT_USE_AVALONST_SINK 1
 #define CAMERA_DATA_OUT_USE_AVALONST_SOURCE 0
-#define CAMERA_DATA_OUT_USE_BACKPRESSURE 0
+#define CAMERA_DATA_OUT_USE_BACKPRESSURE 1
 #define CAMERA_DATA_OUT_USE_IRQ 1
 #define CAMERA_DATA_OUT_USE_PACKET 1
 #define CAMERA_DATA_OUT_USE_READ_CONTROL 0
@@ -220,22 +231,33 @@
 #define CAMERA_DATA_IN_CSR_IRQ 3
 #define CAMERA_DATA_IN_CSR_AVALONMM_AVALONMM_DATA_WIDTH 32
 #define CAMERA_DATA_IN_CSR_AVALONMM_AVALONST_DATA_WIDTH 32
-#define CAMERA_DATA_IN_CSR_BITS_PER_SYMBOL 32
+#define CAMERA_DATA_IN_CSR_BITS_PER_SYMBOL 8
 #define CAMERA_DATA_IN_CSR_CHANNEL_WIDTH 0
 #define CAMERA_DATA_IN_CSR_ERROR_WIDTH 0
 #define CAMERA_DATA_IN_CSR_FIFO_DEPTH 128
 #define CAMERA_DATA_IN_CSR_SINGLE_CLOCK_MODE 1
-#define CAMERA_DATA_IN_CSR_SYMBOLS_PER_BEAT 1
+#define CAMERA_DATA_IN_CSR_SYMBOLS_PER_BEAT 4
 #define CAMERA_DATA_IN_CSR_USE_AVALONMM_READ_SLAVE 1
 #define CAMERA_DATA_IN_CSR_USE_AVALONMM_WRITE_SLAVE 0
 #define CAMERA_DATA_IN_CSR_USE_AVALONST_SINK 1
 #define CAMERA_DATA_IN_CSR_USE_AVALONST_SOURCE 0
-#define CAMERA_DATA_IN_CSR_USE_BACKPRESSURE 0
+#define CAMERA_DATA_IN_CSR_USE_BACKPRESSURE 1
 #define CAMERA_DATA_IN_CSR_USE_IRQ 1
 #define CAMERA_DATA_IN_CSR_USE_PACKET 1
 #define CAMERA_DATA_IN_CSR_USE_READ_CONTROL 0
 #define CAMERA_DATA_IN_CSR_USE_REGISTER 0
 #define CAMERA_DATA_IN_CSR_USE_WRITE_CONTROL 1
+
+/*
+ * Macros for device 'ov7670_camera_0', class 'ov7670_camera'
+ * The macros are prefixed with 'OV7670_CAMERA_0_'.
+ * The prefix is the slave descriptor.
+ */
+#define OV7670_CAMERA_0_COMPONENT_TYPE ov7670_camera
+#define OV7670_CAMERA_0_COMPONENT_NAME ov7670_camera_0
+#define OV7670_CAMERA_0_BASE 0x70000
+#define OV7670_CAMERA_0_SPAN 1024
+#define OV7670_CAMERA_0_END 0x703ff
 
 
 #endif /* _ALTERA_HPS_0_H_ */

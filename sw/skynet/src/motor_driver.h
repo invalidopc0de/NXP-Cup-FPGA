@@ -12,6 +12,6 @@ typedef struct {
 
 #define MOTOR(base)    ((MOTOR_DRIVER_Type *) (base))
 
-void SetDutyCycle(void* base, uint32_t dutyCycle, uint32_t frequency);
+void SetDutyCycle(void* base, float dutyCycle, uint32_t frequency);
 
 #endif

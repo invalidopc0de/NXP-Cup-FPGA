@@ -16,7 +16,7 @@
 
 void* FPGAMapMemory(int *fdPtr)
 {
-	void *virtual_base, fpga_base;
+	void *virtual_base;
 
 	// map the address space for the registers into user space so we can interact with them.
 	// we'll actually map in the entire CSR span of the HPS since we want to access various registers within that span
