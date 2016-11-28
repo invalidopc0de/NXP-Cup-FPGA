@@ -235,16 +235,25 @@ module ghrd(
      .hps_0_f2h_warm_reset_req_reset_n      (~hps_warm_reset ),      //       hps_0_f2h_warm_reset_req.reset_n
 
      // Motor drivers
-    .motor_driver_0_pins_pin_a             (GPIO_0[0]),             //            motor_driver_0_pins.pin_a
-		.motor_driver_0_pins_pin_b             (GPIO_0[1]),             //                               .pin_b
+    .motor_driver_a_pins_pin_a             (GPIO_0[0]),             //            motor_driver_0_pins.pin_a
+		.motor_driver_a_pins_pin_b             (GPIO_0[1]),             //                               .pin_b
  
+    .motor_driver_b_pins_pin_a             (GPIO_0[4]),             //            motor_driver_b_pins.pin_a
+		.motor_driver_b_pins_pin_b             (GPIO_0[5]),             //                               .pin_b
+
+		.servo_driver_pins_pin_a               (GPIO_0[8]),             //              servo_driver_pins.pin_a
+		.servo_driver_pins_pin_b               (GPIO_0[9]),             //                               .pin_b
+
     // Camera pins
-    .camera_pins_adc_convst_pin            (ADC_CONVST),            //                    camera_pins.adc_convst_pin
-		.camera_pins_adc_sck_pin               (ADC_SCK),               //                               .adc_sck_pin
-		.camera_pins_adc_sdi_pin               (ADC_SDI),               //                               .adc_sdi_pin
-		.camera_pins_adc_sdo_pin               (ADC_SDO),               //                               .adc_sdo_pin
-		.camera_pins_camera_clk_pin            (GPIO_0[3]),            //                               .camera_clk_pin
-		.camera_pins_camera_si_pin             (GPIO_0[4]),             //                               .camera_si_pin
+    .camera_pins_soic                      (GPIO_1[13]),                      //                    camera_pins.soic
+	  .camera_pins_soid                      (GPIO_1[12]),                      //                               .soid
+	  //.camera_pins_reset                     (<connected-to-camera_pins_reset>),                     //                               .reset
+	  //.camera_pins_pwdn                      (<connected-to-camera_pins_pwdn>),                      //                               .pwdn
+	  .camera_pins_vsync                     (GPIO_1[10]),                     //                               .vsync
+	  .camera_pins_href                      (GPIO_1[11]),                      //                               .href
+		.camera_pins_pclk                      (GPIO_1[9]),                      //                               .pclk
+		.camera_pins_xclk                      (GPIO_1[8]),                      //                               .xclk
+		.camera_pins_data                      (GPIO_1[7:0]),                    //                               .data
  );
 
 // Debounce logic to clean out glitches within 1ms
