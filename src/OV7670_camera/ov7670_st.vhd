@@ -38,7 +38,7 @@ entity ov7670_st is
 		control_readdata        : out   std_logic_vector(31 downto 0);                    --          .readdata
 		control_write           : in    std_logic                     := '0';             --          .write
 		control_writedata       : in    std_logic_vector(31 downto 0) := (others => '0'); --          .writedata
-		control_waitrequest     : out   std_logic                                         --          .waitrequest
+		control_waitrequest		: out 	std_logic					  := '0'
 	);
 end entity ov7670_st;
 
@@ -46,14 +46,16 @@ architecture rtl of ov7670_st is
 	
 	component ov7670_controller
 	port (
-		clk   : in    std_logic;    
-		resend: in    std_logic;    
-		config_finished : out std_logic;
+		clk   : in    std_logic;
+		rst   : in 	  std_logic;     
 		siod  : inout std_logic;      
 		sioc  : out   std_logic;
-		reset : out   std_logic;
-		pwdn  : out   std_logic;
-		xclk  : out   std_logic
+		--reset : out   std_logic;
+		--pwdn  : out   std_logic;
+		xclk  : out   std_logic;
+		cmd : in std_logic_vector(15 downto 0);
+		cmd_write : in std_logic;
+		cmd_busy : out std_logic
 		);
 	end component;
 
@@ -95,13 +97,16 @@ begin
 
 	controller: ov7670_controller port map(
 		clk   => clock_clk,
+		rst   => reset_reset,
 		sioc  => ov_sensor_sioc,
-		resend => control_write,
 		--config_finished => config_finished,
 		siod  => ov_sensor_siod,
 		--pwdn  => OV7670_PWDN,
 		--reset => OV7670_RESET,
-		xclk  => ov_sensor_xclk
+		xclk  => ov_sensor_xclk,
+		cmd => control_writedata(15 downto 0),
+		cmd_write => control_write,
+		cmd_busy => control_waitrequest
 	);
 
 	ov_sensor_pwdn <= '0';
@@ -109,7 +114,5 @@ begin
 
 	-- Ignore these for now
 	control_readdata <= "00000000000000000000000000000000";
-
-	control_waitrequest <= '0';
 
 end architecture rtl; -- of new_component

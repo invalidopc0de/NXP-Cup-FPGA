@@ -249,8 +249,8 @@ module ghrd(
 	  .camera_pins_soid                      (GPIO_1[12]),                      //                               .soid
 	  //.camera_pins_reset                     (<connected-to-camera_pins_reset>),                     //                               .reset
 	  //.camera_pins_pwdn                      (<connected-to-camera_pins_pwdn>),                      //                               .pwdn
-	  .camera_pins_vsync                     (GPIO_1[10]),                     //                               .vsync
-	  .camera_pins_href                      (GPIO_1[11]),                      //                               .href
+	  .camera_pins_vsync                     (GPIO_1[11]),                     //                               .vsync
+	  .camera_pins_href                      (GPIO_1[10]),                      //                               .href
 		.camera_pins_pclk                      (GPIO_1[9]),                      //                               .pclk
 		.camera_pins_xclk                      (GPIO_1[8]),                      //                               .xclk
 		.camera_pins_data                      (GPIO_1[7:0]),                    //                               .data

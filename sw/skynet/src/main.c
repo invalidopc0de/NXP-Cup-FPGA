@@ -19,7 +19,7 @@
 #include "camera_control.h"
 #include "camera_data.h"
 
-#define LINE_LENGTH 160
+#define LINE_LENGTH 169
 
 #define LOOP_FREQ_HZ	50.0
 #define LOOP_PERIOD 	(1.0/LOOP_FREQ_HZ)
@@ -31,7 +31,8 @@ typedef struct {
 	void *servo_base;
 	void *camera_control_base;
 	void *camera_data_base;
-	void *camera_data_status_base;
+	//void *camera_data_status_base;
+	mSGMDA_Bases_Type camera_data_status_base;
 
 	LineAnalyzerParams la_params;
 
@@ -53,12 +54,12 @@ static void control_loop_cb (EV_P_ ev_timer *w, int revents)
 	LineFeatures features;
 	ControlLoopOutputs output;
 
-	puts ("Loop Fired");
+	//puts ("Loop Fired");
 
 	uint32_t line[LINE_LENGTH];
 	memset(line, 0, LINE_LENGTH);
 
-	int camera_len = CameraDataGetLine(state->camera_data_base, state->camera_data_status_base, line, LINE_LENGTH);
+	int camera_len = CameraDataGetLine(state->camera_data_base, &state->camera_data_status_base, line, LINE_LENGTH);
 
 	// Get Camera line if available
 	if (camera_len > 0)
@@ -94,8 +95,11 @@ int main() {
 	state.motor1_base = FPGA_MEM(state.virtual_base, MOTOR_DRIVER_B_BASE);
 	state.servo_base =  FPGA_MEM(state.virtual_base, SERVO_DRIVER_BASE);
 	state.camera_control_base = FPGA_MEM(state.virtual_base, OV7670_CAMERA_0_BASE);
-	state.camera_data_base = FPGA_MEM(state.virtual_base, CAMERA_DATA_OUT_BASE);
-	state.camera_data_status_base = FPGA_MEM(state.virtual_base, CAMERA_DATA_IN_CSR_BASE);
+	state.camera_data_base = FPGA_MEM(state.virtual_base, CAMERA_DATA_BASE);
+	//state.camera_data_status_base = FPGA_MEM(state.virtual_base, CAMERA_DATA_IN_CSR_BASE);
+	state.camera_data_status_base.CSR_ptr = FPGA_MEM(state.virtual_base, MODULAR_SGDMA_DISPATCHER_0_CSR_BASE);
+	state.camera_data_status_base.Descriptor_ptr = FPGA_MEM(state.virtual_base, MODULAR_SGDMA_DISPATCHER_0_DESCRIPTOR_SLAVE_BASE);
+	state.camera_data_status_base.Response_ptr = FPGA_MEM(state.virtual_base, MODULAR_SGDMA_DISPATCHER_0_RESPONSE_SLAVE_BASE);
 
 	SetDutyCycle(state.motor0_base, 50.0, 0);
 	SetDutyCycle(state.motor1_base, 50, 0);
@@ -109,6 +113,13 @@ int main() {
 	state.cl_params.Kd = 0;
 	state.cl_params.StopDetectionEnabled = 0;
 
+	// Reset Camera
+	CameraReset(state.camera_control_base);
+
+	memset(state.camera_data_base, 0, LINE_LENGTH);
+
+	// Add camera
+	CameraDataDMAStart(&state.camera_data_status_base, LINE_LENGTH);
 
 	// use the default event loop unless you have special needs
 	struct ev_loop *loop = EV_DEFAULT;

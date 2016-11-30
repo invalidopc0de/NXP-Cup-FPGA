@@ -15,8 +15,12 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 	int i = 0;
 	int last_edge = 0;
 
+	printf("%i\n\r",-1); // start value
+
 	for (i = 0; i < params->LineLength-1; i++)
 	{
+		printf("%i\n", line[i]);
+
 		int difference = line[i+1] - line[i];
 
 		if ((abs(difference) > params->LineThreashold) &&
@@ -43,6 +47,8 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 			}
 		}
 	}
+
+	printf("%i\n\r",-2); // end value
 
 	return LINEANALYZER_SUCCESS;
 }

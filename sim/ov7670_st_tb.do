@@ -12,20 +12,39 @@ vsim ov7670_st_tb
 
 add wave -position end  sim:/ov7670_st_tb/clk
 add wave -position end  sim:/ov7670_st_tb/rst
-add wave -position end  sim:/ov7670_st_tb/ov_sensor_vsync
-add wave -position end  sim:/ov7670_st_tb/ov_sensor_href
-add wave -position end  sim:/ov7670_st_tb/ov_sensor_pclk
-add wave -position end  sim:/ov7670_st_tb/ov_sensor_data
 
-add wave -position end  sim:/ov7670_st_tb/uut/line0_out_data
-add wave -position end  sim:/ov7670_st_tb/uut/line0_out_valid
-add wave -position end  sim:/ov7670_st_tb/uut/line0_out_channel
-add wave -position end  sim:/ov7670_st_tb/uut/line0_out_startofpacket
-add wave -position end  sim:/ov7670_st_tb/uut/line0_out_endofpacket
+add wave -group "Camera Interface" -position end  sim:/ov7670_st_tb/ov_sensor_vsync
+add wave -group "Camera Interface" -position end  sim:/ov7670_st_tb/ov_sensor_href
+add wave -group "Camera Interface" -position end  sim:/ov7670_st_tb/ov_sensor_pclk
+add wave -group "Camera Interface" -position end  sim:/ov7670_st_tb/ov_sensor_data
+add wave -group "Camera Interface" -position end  sim:/ov7670_st_tb/ov_sensor_sioc
+add wave -group "Camera Interface" -position end  sim:/ov7670_st_tb/ov_sensor_siod
+
+add wave -group "Avalon ST Output" -position end  sim:/ov7670_st_tb/uut/line0_out_data
+add wave -group "Avalon ST Output" -position end  sim:/ov7670_st_tb/uut/line0_out_valid
+add wave -group "Avalon ST Output" -position end  sim:/ov7670_st_tb/uut/line0_out_channel
+add wave -group "Avalon ST Output" -position end  sim:/ov7670_st_tb/uut/line0_out_startofpacket
+add wave -group "Avalon ST Output" -position end  sim:/ov7670_st_tb/uut/line0_out_endofpacket
+
+add wave -group "Control Interface" -position end  sim:/ov7670_st_tb/control_address
+add wave -group "Control Interface" -position end  sim:/ov7670_st_tb/control_read
+add wave -group "Control Interface" -position end  sim:/ov7670_st_tb/control_readdata
+add wave -group "Control Interface" -position end  sim:/ov7670_st_tb/control_write
+add wave -group "Control Interface" -position end  sim:/ov7670_st_tb/control_writedata
+add wave -group "Control Interface" -position end  sim:/ov7670_st_tb/control_waitrequest
+
+add wave -group "I2C Stuff" -position end sim:/ov7670_st_tb/uut/controller/Inst_i2c_sender/*
+
+add wave -position end  sim:/ov7670_st_tb/uut/controller/r
+
+add wave -position end  sim:/ov7670_st_tb/uut/controller/cmd_write
+add wave -position end  sim:/ov7670_st_tb/uut/controller/cmd_busy
 
 add wave -position end  sim:/ov7670_st_tb/uut/capture/r
 
-run 175us
+
+
+run 1000us
 
 #endsim
 #quit

@@ -31,6 +31,17 @@ ARCHITECTURE test OF ov7670_st_tb IS
     signal ov_sensor_href  : std_logic := '0';
     signal ov_sensor_pclk  : std_logic := '0';
     signal ov_sensor_data  : std_logic_vector(7 downto 0) := (others => '0');
+    signal ov_sensor_sioc  : std_logic := '0';
+    signal ov_sensor_siod  : std_logic := '0';
+
+    signal control_address     : std_logic_vector(7 downto 0)  := (others => '0'); --   control.address
+	signal control_read        : std_logic                     := '0';             --          .read
+	signal control_readdata    : std_logic_vector(31 downto 0);                    --          .readdata
+	signal control_write       : std_logic                     := '0';             --          .write
+	signal control_writedata   : std_logic_vector(31 downto 0) := (others => '0'); --          .writedata
+	signal control_waitrequest : std_logic  ;
+
+    signal init_finished : std_logic := '0';
 
     component ov7670_st is
 	port (
@@ -70,9 +81,19 @@ BEGIN
             ov_sensor_vsync => ov_sensor_vsync,
             ov_sensor_href => ov_sensor_href,
             ov_sensor_pclk => ov_sensor_pclk,
-            ov_sensor_data => ov_sensor_data
+            ov_sensor_data => ov_sensor_data,
+
+            ov_sensor_sioc => ov_sensor_sioc,
+            ov_sensor_siod => ov_sensor_siod,
+            
+            control_address     => control_address    ,
+            control_read        => control_read       ,
+            control_readdata    => control_readdata   ,
+            control_write       => control_write      ,
+            control_writedata   => control_writedata  ,
+            control_waitrequest => control_waitrequest
             );
-        
+    
     clk_process :process
     begin
         clk <= '0';
@@ -98,16 +119,31 @@ BEGIN
         rst <= '1';
         wait for clk_period*5;
         rst <= '0';
-        wait;                                                       
+
+        wait for clk_period*2;     
+
+        control_write <= '1';
+        control_writedata(15 downto 0) <= x"1280";
+
+        wait until control_waitrequest = '0';
+        
+        wait for clk_period;
+        control_write <= '0';
+
+        init_finished <= '1';
+
+        wait;                               
     end process init;       
                                         
     always : process                                              
         -- optional sensitivity list                                  
         -- (        )                                                 
         -- variable declarations                                      
-    begin                                                         
+    begin                    
+        wait until init_finished = '1';
+
         -- code executes for every event on sensitivity list  
-        wait for clk_period*50;
+        wait for clk_period*5;
 
         -- Offset 90 degrees off of the actual clock
         wait for clk_period/2;

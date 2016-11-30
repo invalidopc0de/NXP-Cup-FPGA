@@ -82,7 +82,7 @@ begin
                 v := init;
                 v.state := WAIT_FOR_VSYNC;
             when WAIT_FOR_VSYNC =>
-                v.data_valid := '1';
+                v.data_valid := '0';
                 v.eop := '0';
                 if (vsync = '1') then 
                     v.data_valid := '0';
@@ -96,11 +96,12 @@ begin
                 v.eop := '0';
                 if ((r.last_pclk = '0' and pclk = '1') and href = '1' ) then
                     -- We are starting a new line
-                    if (r.row_index > 60) then -- TODO Update with real value
+                    if (r.row_index = 60) then -- TODO Update with real value
                         -- Beginning of our line!
                         v.camera_data := din;
                         v.channel := std_logic_vector(r.channel_index);
-                        v.last_byte_useful := '1';
+                        
+                        v.last_byte_useful := '0';
                         v.data_valid := '1';
 
                         v.sop := '1';
@@ -138,13 +139,15 @@ begin
                         end if;
                     end if;
                 else 
-                    if(r.channel_index < 2) then 
-                        -- Increase channel count
-                        v.channel_index := r.channel_index + 1;
-                        v.state := WAIT_FOR_HREF;
-                    else 
-                        v.state := WAIT_FOR_VSYNC;
-                    end if;
+                    --if(r.channel_index < 2) then 
+                    --    -- Increase channel count
+                    --    v.channel_index := r.channel_index + 1;
+                    --    v.state := WAIT_FOR_HREF;
+                    --else 
+                    --    v.state := WAIT_FOR_VSYNC;
+                    --end if;
+
+                    v.state := WAIT_FOR_VSYNC;
                     
                     v.camera_data := (others => '0');
                     v.eop := '1';

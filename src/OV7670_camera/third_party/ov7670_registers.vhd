@@ -34,13 +34,27 @@ begin
 			end if;
 
 			case address is
--- Attempt to simplify
+			-- QCIF
 				when x"00" => sreg <= x"1280"; -- COM7   Reset
 				when x"01" => sreg <= x"1280"; -- COM7   Reset
-				when x"02" => sreg <= x"1100"; -- CLKRC  Prescaler - Fin/(1+1)
-				when x"03" => sreg <= x"0C08"; -- COM3   Enable scaling
-				when x"04" => sreg <= x"1208"; -- COM7 	 Set format to QCIF 
 
+				when x"02" => sreg <= x"1101"; -- CLKRC
+				when x"03" => sreg <= x"1200"; -- COM7
+				when x"04" => sreg <= x"0C0C"; -- COM3
+				when x"05" => sreg <= x"3E11"; -- COM14
+				when x"06" => sreg <= x"703A"; -- SCALING_XSC
+				when x"07" => sreg <= x"7135"; -- SCALING_YSC
+				when x"08" => sreg <= x"7211"; -- SCALING_DCWCTR
+				when x"09" => sreg <= x"73F1"; -- SCALING_PCLK_DIV
+				when x"0A" => sreg <= x"A252"; -- SCALING_PCLK_DELAY
+
+-- Attempt to simplify
+--				when x"00" => sreg <= x"1280"; -- COM7   Reset
+--				when x"01" => sreg <= x"1280"; -- COM7   Reset
+--				when x"02" => sreg <= x"1100"; -- CLKRC  Prescaler - Fin/(1+1)
+--				when x"03" => sreg <= x"1208"; -- COM7 	 Set format to QCIF 
+--				when x"04" => sreg <= x"0C04"; -- COM3  Lots of stuff, enable scaling, all others off
+--				when x"05" => sreg <= x"3E19"; -- COM14  PCLK scaling = 0
 -- Old Configuration
 --				when x"00" => sreg <= x"1280"; -- COM7   Reset
 --				when x"01" => sreg <= x"1280"; -- COM7   Reset

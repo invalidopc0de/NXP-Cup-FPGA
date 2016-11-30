@@ -18,4 +18,4 @@ $(TARGET): src\main.o src\fpga_interface.o src\motor_driver.o src\line_analyzer.
 
 .PHONY: clean
 clean:
-	rm -f $(TARGET) *.a *.o *~ src\*.o
+	rm -f $(TARGET) *.a *.o *~ src/*.o

@@ -12,8 +12,7 @@
 
 /** CAMERA - Register Layout Typedef */
 typedef struct {
-  volatile uint32_t DIR;        /**< Motor direction, offset: 0x0 */
-  volatile uint32_t DUTY_CYCLE; /**< PWM Duty cycle, offset: 0x4 */
+  volatile uint32_t CONFIG;        /**< Camera config write, offset: 0x0 */
 } CAMERA_CONTROL_Type;
 
 #define CAMERA_CONTROL(base)    ((CAMERA_CONTROL_Type *) (base))

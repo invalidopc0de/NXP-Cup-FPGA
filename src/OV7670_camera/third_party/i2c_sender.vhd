@@ -12,11 +12,13 @@ entity i2c_sender is
     Port ( clk   : in  STD_LOGIC;	 
            siod  : inout  STD_LOGIC;
            sioc  : out  STD_LOGIC;
-			  taken : out  STD_LOGIC;
-			  send  : in  STD_LOGIC;
+			taken : out  STD_LOGIC;
+			done	 : out STD_LOGIC; -- Extra from Mark
+			send  : in  STD_LOGIC;
            id    : in  STD_LOGIC_VECTOR (7 downto 0);
            reg   : in  STD_LOGIC_VECTOR (7 downto 0);
            value : in  STD_LOGIC_VECTOR (7 downto 0));
+		   
 end i2c_sender;
 
 architecture Behavioral of i2c_sender is
@@ -24,6 +26,8 @@ architecture Behavioral of i2c_sender is
 	signal   busy_sr  : std_logic_vector(31 downto 0) := (others => '0');
 	signal   data_sr  : std_logic_vector(31 downto 0) := (others => '1');
 begin
+	done <= not busy_sr(31);
+
 	process(busy_sr, data_sr(31))
 	begin
 		if busy_sr(11 downto 10) = "10" or 
