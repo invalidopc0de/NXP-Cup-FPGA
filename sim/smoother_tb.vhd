@@ -54,20 +54,57 @@ BEGIN
         wait for clk_period/2;  --for next 0.5 ns signal is '1'.
     end process;
 
-    -- Stimulus process
-    stim_proc: process
+    -- Main test process
+    main: process
+    	-- Reset procedure for all signals
+    	procedure RESET is
+    	begin
+    		rst 			<= '0';
+    		s_raw_data		<= (others=>'0');
+    		s_raw_channel	<= (others=>'0');
+    		s_raw_valid		<= '0';
+    		s_raw_sop		<= '0';
+    		s_raw_eop		<= '0';
+	        wait for clk_period*5;
+	        rst 			<= '1';
+	        wait for clk_period;
+		end RESET;
+		
+		--procedure for sending streaming data packets
+    	procedure SEND_PKT (channel : in integer) is
+    	begin
+	        for ii in 1 to 127 loop
+	        	--start of packet
+	        	if (ii = 1) then
+	        		s_raw_sop <= '1';
+		    		s_raw_eop <= '0';
+	    		--end of packet
+		    	elsif (ii = 127) then
+	    			s_raw_sop <= '0';
+		    		s_raw_eop <= '1';
+	    		else
+	    			s_raw_sop <= '0';
+		    		s_raw_eop <= '0';
+	    		end if;
+	    		s_raw_valid		<= '1';
+	    		s_raw_channel	<= std_logic_vector(to_unsigned(channel, s_raw_data'length));
+	    		s_raw_data		<= std_logic_vector(to_unsigned(ii, s_raw_data'length));
+		        wait for clk_period;
+			end loop;
+			--reset signals
+			s_raw_valid	<= '0';
+			s_raw_sop 	<= '0';
+			s_raw_eop 	<= '0';
+	        wait for clk_period;
+		end SEND_PKT;
+		
     begin  
     	--Reset
-        rst <= '1';
-        wait for clk_period*5;
-        rst <= '0';
-        
-        wait until dout.adc_capture = '1';
-        wait for clk_period*20;
-        
-        din.adc_data0 <= X"123";
-        din.adc_ready <= '1';
-
+        RESET;
+        --send a packet
+        SEND_PKT(0);
+        SEND_PKT(1);
+        SEND_PKT(2);
         wait;
   end process;                                      
 END test;
