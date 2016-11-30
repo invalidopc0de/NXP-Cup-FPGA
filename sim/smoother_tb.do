@@ -1,8 +1,8 @@
 vlib work
 set worklib work
-vcom ../src/nxp_fpga_types.vhd 
-vcom ../src/smoothing_filter/smoother.vhd
-vcom smoother_tb.vhd
+vcom -2008 ../src/nxp_fpga_types.vhd 
+vcom -2008 ../src/smoothing_filter/smoother.vhd
+vcom -2008 smoother_tb.vhd
 vsim smoother_tb
 
 
