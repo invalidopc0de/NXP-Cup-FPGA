@@ -8,6 +8,9 @@
 #include "line_analyzer.h"
 
 #include <stdlib.h>
+#include <stdio.h>
+
+//#define PRINT_DEBUG 1
 
 int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* features)
 {
@@ -15,13 +18,17 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 	int i = 0;
 	int last_edge = 0;
 
-	printf("%i\n\r",-1); // start value
+	if (params->PrintDebug){
+		printf("%i\n\r",-1); // start value
+	}
 
-	for (i = 0; i < params->LineLength-1; i++)
+	for (i = 15; i < params->LineLength-10; i++)
 	{
-		printf("%i\n", line[i]);
+		if (params->PrintDebug) {
+			printf("%i\n", line[i]);
+		}
 
-		int difference = line[i+1] - line[i];
+		int difference = line[i+params->SampleOffset] - line[i];
 
 		if ((abs(difference) > params->LineThreashold) &&
 				((i - last_edge) > params->LineTimeout)) {
@@ -37,6 +44,7 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 				features->LeftLineVisible = 1;
 				features->LeftLineLocation = i;
 				last_edge = i;
+				printf("Found left line at %d\n", i);
 
 			} else if ((difference < 0) && !features->RightLineVisible) {
 				// We found the right edge	--\__
@@ -44,11 +52,13 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 				features->RightLineVisible = 1;
 				features->RightLineLocation = i;
 				last_edge = i;
+				printf("Found right line at %d\n", i);
 			}
 		}
 	}
-
-	printf("%i\n\r",-2); // end value
+	if (params->PrintDebug) {
+		printf("%i\n\r",-2); // end value
+	}
 
 	return LINEANALYZER_SUCCESS;
 }

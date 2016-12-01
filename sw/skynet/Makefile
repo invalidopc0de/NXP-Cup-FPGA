@@ -11,7 +11,7 @@ ARCH= arm
 all: build
 
 build: $(TARGET)
-$(TARGET): src\main.o src\fpga_interface.o src\motor_driver.o src\line_analyzer.o src\control_loop.o src\camera_control.o src\camera_data.o   
+$(TARGET): src\main.o src\fpga_interface.o src\motor_driver.o src\line_analyzer.o src\control_loop.o src\camera_control.o src\camera_data.o cJSON\cJSON.o   
 	$(CC) $(LDFLAGS)   $^ -o $@  
 %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@

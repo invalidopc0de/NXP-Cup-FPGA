@@ -9,6 +9,7 @@
 #include <unistd.h>
 
 #define DELAY_US	3000
+#define CONFIG_BUFF_MAX_LEN	1024*10 // 10kBytes
 
 void CameraSetReg(void *base, uint32_t value)
 {
@@ -124,4 +125,55 @@ int CameraReset(void* base)
 	AppNoteRegs(base);
 
 	return 0;
+}
+
+
+int CameraLoadConfig(void* base, char* filename)
+{
+	int fd = -1;
+		int len = 0;
+		char *buffer;
+
+		// Open file
+		fd = open(filename, O_RDONLY);
+		if (fd < 0)
+		{
+			printf("Unable to open file! %s\n", filename);
+			return -1;
+		}
+
+		// Read file into buffer
+		buffer = malloc(CONFIG_BUFF_MAX_LEN);
+		if (buffer == NULL)
+		{
+			printf("Error allocating config buffer!\n");
+			return -1;
+		}
+
+		len = read(fd, buffer, CONFIG_BUFF_MAX_LEN);
+		buffer[len] = '\0';
+
+		// Parse file
+		cJSON * root = cJSON_Parse(buffer);
+
+		// Pull out interesting configs
+		cJSON *la_config = cJSON_GetObjectItem(root, "line_analyzer");
+		state->la_params.LineThreashold = cJSON_GetObjectItem(la_config, "LineThreshold")->valueint;
+		state->la_params.LineTimeout = cJSON_GetObjectItem(la_config, "LineTimeout")->valueint;
+		state->la_params.StopDetectionEnabled = cJSON_GetObjectItem(la_config, "StopDetectionEnabled")->valueint;
+		state->la_params.PrintDebug = cJSON_GetObjectItem(la_config, "PrintDebug")->valueint;
+		state->la_params.SampleOffset = cJSON_GetObjectItem(la_config, "SampleOffset")->valueint;
+
+		cJSON *cl_config = cJSON_GetObjectItem(root, "control_loop");
+		state->cl_params.Kp = cJSON_GetObjectItem(cl_config, "Kp")->valuedouble;
+		state->cl_params.Ki = cJSON_GetObjectItem(cl_config, "Ki")->valuedouble;
+		state->cl_params.Kd = cJSON_GetObjectItem(cl_config, "Kd")->valuedouble;
+		state->cl_params.StopDetectionEnabled = cJSON_GetObjectItem(cl_config, "StopDetectionEnabled")->valueint;
+		state->cl_params.DefaultSpeed = cJSON_GetObjectItem(cl_config, "DefaultSpeed")->valueint;
+
+		cJSON_Delete(root);
+
+		free(buffer);
+
+		return 0;
 }

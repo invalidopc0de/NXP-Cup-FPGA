@@ -17,8 +17,11 @@ typedef struct {
 	int LineThreashold;
 	int LineLength;
 	int LineTimeout;
+	int SampleOffset;
 
 	char StopDetectionEnabled;
+
+	char PrintDebug;
 } LineAnalyzerParams;
 
 typedef struct {

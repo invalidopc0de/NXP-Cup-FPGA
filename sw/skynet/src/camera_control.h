@@ -19,4 +19,6 @@ typedef struct {
 
 int CameraReset(void* base);
 
+int CameraLoadConfig(void* base, char* filename);
+
 #endif /* SRC_CAMERA_DATA_H_ */

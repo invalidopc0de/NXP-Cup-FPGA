@@ -10,42 +10,6 @@
 
 #include "stdint.h"
 
-#ifdef NXP_FPGA_FIFO
-
-/** CAMERA_DATA_STATUS - Register Layout Typedef */
-typedef struct {
-  volatile uint32_t FILL_LEVEL;     /**< FIFO Fill level, offset: 0x0 */
-  volatile uint32_t STATUS; 		/**< FIFO Status, offset: 0x4 */
-  volatile uint32_t EVENT;			/**< FIFO Event, offset: 0x8 */
-  volatile uint32_t INT_ENABLE;		/**< FIFO Interrupt Enable, offset: 0xC */
-  volatile uint32_t ALMOST_FULL;	/**< FIFO Almost Full, offset: 0x10 */
-  volatile uint32_t ALMOST_EMPTY;	/**< FIFO Almost Empty, offset: 0x14 */
-} CAMERA_DATA_STATUS_Type;
-
-/** CAMERA_DATA - Register Layout Typedef */
-typedef struct {
-  volatile uint32_t DATA;        /**< FIFO Data, offset: 0x0 */
-  volatile uint32_t FLAGS; 		/**< FIFO Flags, offset: 0x4 */
-} CAMERA_DATA_Type;
-
-
-
-#define CAMERA_EOP_MASK	0x2
-#define CAMERA_EOP_SHIFT 1
-#define CAMERA_EOP(x) ((x & CAMERA_EOP_MASK) >> CAMERA_EOP_SHIFT)
-
-#define CAMERA_SOP_MASK 0x1
-#define CAMERA_SOP_SHIFT 0
-#define CAMERA_SOP(x) ((x & CAMERA_SOP_MASK) >> CAMERA_SOP_SHIFT)
-
-#define CAMERA_DATA_STATUS(base)    ((CAMERA_DATA_STATUS_Type *) (base))
-
-#define CAMERA_DATA(base)    ((CAMERA_DATA_Type *) (base))
-
-int CameraDataGetLine(void* data_base, void* status_base, uint32_t* line, int maxLen);
-
-#else
-
 #pragma pack(push,1)
 /**
  * @brief mSGDMA control and status register
@@ -83,11 +47,17 @@ typedef struct {
 #define DMA_DSC_CONTROL_END_EOP_SHIFT 	12
 #define DMA_DSC_CONTROL_END_EOP_MASK	(1 << 12)
 
+#define DMA_DSC_CONTROL_EARLY_DONE_SHIFT 	24
+#define DMA_DSC_CONTROL_EARLY_DONE_MASK		(1 << 24)
+
 #define DMA_CSR_STATUS_RESPONSE_BUFF_EMPTY_SHIFT 	3
 #define DMA_CSR_STATUS_RESPONSE_BUFF_EMPTY_MASK 	(1 << 3)
 
 #define DMA_CSR_STATUS_BUSY_SHIFT	0
 #define DMA_CSR_STAUTS_BUSY_MASK	(1 << 0)
+
+#define DMA_RESPONSE_EARLY_TERMINATION_SHIFT 	1
+#define DMA_RESPONSE_EARLY_TERMINATION_MASK		(1 << 1)
 
 typedef struct {
 	void*	CSR_ptr;
@@ -97,7 +67,5 @@ typedef struct {
 
 void CameraDataDMAStart(mSGMDA_Bases_Type* status_base, int maxLen);
 int CameraDataGetLine(void* data_base, mSGMDA_Bases_Type* status_base, uint32_t* line, int maxLen);
-
-#endif
 
 #endif /* SRC_CAMERA_DATA_H_ */

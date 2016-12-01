@@ -8,15 +8,7 @@
 #include "control_loop.h"
 
 #include <math.h>
-
-#define SERVO_MAX_RIGHT 7
-#define SERVO_CTR 5
-#define SERVO_MAX_LEFT  3
-
-#define MOTOR_FORWARD   0
-#define MOTOR_BACKWARD  1
-#define MOTOR_MIN   0
-#define MOTOR_MAX   100
+#include "motor_driver.h"
 
 int ControlLoopInit(ControlLoopState* state)
 {
@@ -32,6 +24,7 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
     
     LineFeatures* line1 = params->lines[0];
     
+    /*
     if (line1->LeftLineVisible && line1->RightLineVisible) {
         // We can see both lines
         int ideal_center_pnt = params->LineLength >> 1; // Fast divide by 2
@@ -63,9 +56,10 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
         outputs->MotorDirection[0] = MOTOR_FORWARD;
         outputs->MotorDirection[1] = MOTOR_FORWARD;
 
-        outputs->MotorDutyCycle[0] = MOTOR_MAX;
-        outputs->MotorDutyCycle[1] = MOTOR_MAX;
-    } else if (line1->LeftLineVisible || line1->RightLineVisible) {
+        outputs->MotorDutyCycle[0] = 30;
+        outputs->MotorDutyCycle[1] = 30;
+    } else */
+    	if (line1->LeftLineVisible || line1->RightLineVisible) {
         // We can only see one of the lines
 
         // For now, lets just turn a decent amount
@@ -80,8 +74,8 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
         outputs->MotorDirection[0] = MOTOR_FORWARD;
         outputs->MotorDirection[1] = MOTOR_FORWARD;
 
-        outputs->MotorDutyCycle[0] = MOTOR_MAX;
-        outputs->MotorDutyCycle[1] = MOTOR_MAX;
+        outputs->MotorDutyCycle[0] = params->DefaultSpeed;
+        outputs->MotorDutyCycle[1] = params->DefaultSpeed;
     } else {
         // We can't see anything! Help
 
@@ -93,7 +87,9 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
         outputs->MotorDirection[0] = MOTOR_FORWARD;
         outputs->MotorDirection[1] = MOTOR_FORWARD;
 
-        outputs->MotorDutyCycle[0] = MOTOR_MAX;
-        outputs->MotorDutyCycle[1] = MOTOR_MAX;
+        outputs->MotorDutyCycle[0] = params->DefaultSpeed;
+        outputs->MotorDutyCycle[1] = params->DefaultSpeed;
     }
+
+    return 0;
 }

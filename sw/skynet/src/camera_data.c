@@ -8,52 +8,8 @@
 #include "camera_data.h"
 #include "hps_0.h"
 #include <string.h>
+#include <stdio.h>
 
-#ifdef NXP_FPGA_FIFO
-int CameraDataGetLine(void* data_base, void* status_base, uint32_t* line, int maxLen)
-{
-    int i = 0;
-    char found_start = 0;
-
-    CAMERA_DATA_STATUS_Type* status = CAMERA_DATA_STATUS(status_base);
-    CAMERA_DATA_Type* data = CAMERA_DATA(data_base);
-
-    for (i = 0; i < maxLen; i++)
-    {
-    	if (found_start == 0)
-    	{
-    		int fill_level = status->FILL_LEVEL;
-    		// Find the start of the packet
-    		while (fill_level > 0) {
-    			int flags = data->FLAGS;
-    			if (CAMERA_SOP(flags))
-    			{
-    				// We found the start of the line
-    				found_start = 1;
-    				break;
-    			}
-
-    			line[i] = data->DATA;
-    		}
-
-    		if (found_start == 0) {	return 0; }; // Line isn't ready
-    	} else {
-    		// We already found the packet start
-    		line[i] = data->DATA;
-
-    		int flags = data->FLAGS;
-    		if (CAMERA_EOP(flags))
-    		{
-    			// We found the end of the packet!
-    			break;
-    		}
-    	}
-    }
-
-    return i+1; // The length of the packet
-}
-
-#else
 
 void CameraDataDMAStart(mSGMDA_Bases_Type* status_base, int maxLen)
 {
@@ -61,9 +17,10 @@ void CameraDataDMAStart(mSGMDA_Bases_Type* status_base, int maxLen)
 
 	// Start Next DMA transaction
 	//descriptor_reg->read_addr = 0; // Read from camera stream
-	descriptor_reg->write_addr = CAMERA_DATA_BASE; // This is cheating, it shouldn't be hardcoded
+	descriptor_reg->write_addr = CAMERA_DATA_BASE; // This is cheating, it shouldn't be hardcoded here
 	descriptor_reg->length = maxLen;
 	descriptor_reg->control = DMA_DSC_CONTROL_END_EOP_MASK;
+	descriptor_reg->control |= DMA_DSC_CONTROL_EARLY_DONE_MASK;
 
 	// Lets GOOOOO
 	descriptor_reg->control |= DMA_DSC_CONTROL_GO_MASK;
@@ -90,6 +47,11 @@ int CameraDataGetLine(void* data_base, mSGMDA_Bases_Type* status_base, uint32_t*
 	response.bytes_transfered = ((uint32_t *)status_base->Response_ptr)[0];
 	response.flags = ((uint32_t *)status_base->Response_ptr)[1];
 
+	if (response.flags & DMA_RESPONSE_EARLY_TERMINATION_MASK)
+	{
+		printf("Early termination!\n");
+	}
+
 	// Pick the smaller of the two buffers
 	int len = (response.bytes_transfered > maxLen) ? maxLen : response.bytes_transfered;
 
@@ -110,4 +72,3 @@ int CameraDataGetLine(void* data_base, mSGMDA_Bases_Type* status_base, uint32_t*
 	return len;
 }
 
-#endif

@@ -26,6 +26,8 @@ typedef struct {
     float Kd; 
 
 	char StopDetectionEnabled;
+
+	int	DefaultSpeed;
 } ControlLoopParams;
 
 typedef struct {
