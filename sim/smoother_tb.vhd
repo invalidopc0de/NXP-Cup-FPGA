@@ -10,7 +10,8 @@
 -- Simulation tool : Active-HDL (VHDL)
 -- 
 
-LIBRARY ieee;                                               
+LIBRARY ieee;
+USE ieee.numeric_std.all;                                          
 USE ieee.std_logic_1164.all;       
 USE work.nxp_fpga_types.all;                      
 
@@ -30,8 +31,40 @@ ARCHITECTURE test OF smoother_tb IS
     signal s_raw_sop		: std_logic;
     signal s_raw_eop		: std_logic;
     
+    --components
+	component smoother is
+		generic (
+			/* Length of data from the camera */
+			G_DATA_LENGTH	: integer
+		);
+	    port (
+	        clk 			: in std_logic; -- 50 Mhz
+	        rst 			: in std_logic; -- Active high
+			
+			/* Raw data streaming input */
+			--!{
+	        raw_data		: in std_logic_vector(31 downto 0);
+	        raw_channel 	: in std_logic_vector(1 downto 0);
+	        raw_valid		: in std_logic;
+	        raw_sop			: in std_logic;
+	        raw_eop			: in std_logic;
+	        --!}
+			
+			/* Smooth data streaming out */
+			--!{
+	        smooth_data		: out std_logic_vector(31 downto 0);
+	        smooth_valid	: out std_logic;
+	        smooth_sop		: out std_logic;
+	        smooth_eop		: out std_logic
+	        --!}
+	    );
+	end component;
+    
 BEGIN
-    uut: entity work.smoother
+	uut: entity work.smoother
+		generic map(
+			G_DATA_LENGTH => 128
+		)
         port map (
 	        clk				=> clk,
 	        rst				=> rst,

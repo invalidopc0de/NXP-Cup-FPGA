@@ -14,7 +14,7 @@ use work.nxp_fpga_types.all;
 entity smoother is
 	generic (
 		/* Length of data from the camera */
-		G_DATA_LENGTH	: integer(0 to 256)
+		G_DATA_LENGTH	: integer
 	);
     port (
         clk 			: in std_logic; -- 50 Mhz
@@ -94,19 +94,19 @@ begin
         			s_smoother_nxt_state <= IDLE;
     			end if;
 			when READ_PACKET_1 =>
-				if ((raw_valid & raw_eop) = '1') then
+				if (raw_valid and raw_eop) then
 					s_smoother_nxt_state <= IDLE;
 				else
 					s_smoother_nxt_state <= READ_PACKET_1;
 				end if;
 			when READ_PACKET_2 =>
-				if ((raw_valid & raw_eop) = '1') then
+				if (raw_valid and raw_eop) then
 					s_smoother_nxt_state <= IDLE;
 				else
 					s_smoother_nxt_state <= READ_PACKET_2;
 				end if;
 			when SMOOTH =>
-				if ((raw_valid & raw_eop) = '1') then
+				if (raw_valid and raw_eop) then
 					s_smoother_nxt_state <= IDLE;
 				else
 					s_smoother_nxt_state <= SMOOTH;
@@ -124,12 +124,12 @@ begin
 		elsif rising_edge(clk) then
 			case (s_smoother_fsm) is
 				when READ_PACKET_1 =>
-					if (raw_valid = 1) then
+					if (raw_valid = '1') then
 						s_data_reg_1(ii) 	<= raw_data;
 						ii 					:= ii+1;
 					end if;
 				when READ_PACKET_2 =>
-					if (raw_valid = 1) then
+					if (raw_valid = '1') then
 						s_data_reg_2(ii) 	<= raw_data;
 						ii 					:= ii+1;
 					end if;
@@ -156,8 +156,8 @@ begin
 		elsif rising_edge(clk) then
 			case (s_smoother_fsm) is
 				when SMOOTH =>
-					if (raw_valid = 1) then
-				        smooth_data		<= raw_data + s_data_reg_1(ii) + s_data_reg_2(ii);
+					if (raw_valid = '1') then
+				        smooth_data		<= std_logic_vector(unsigned(raw_data) + unsigned(s_data_reg_1(ii)) + unsigned(s_data_reg_2(ii)));
 				        smooth_valid	<= '1';
 				        smooth_sop		<= raw_sop;
 				        smooth_eop		<= raw_eop;
