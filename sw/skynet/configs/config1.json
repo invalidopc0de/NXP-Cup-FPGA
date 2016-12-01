@@ -1,0 +1,17 @@
+{
+	"camera_config": "camera_config.txt",
+    "line_analyzer": {
+        "LineThreshold":  50,
+        "LineTimeout":  5,
+		"StopDetectionEnabled":  0,
+		"PrintDebug": 0,
+		"SampleOffset": 1 
+    },
+	"control_loop": {
+        "Kp": 1.0,
+        "Ki": 0.0,
+        "Kd": 0.0,
+        "StopDetectionEnabled":  0,
+		"DefaultSpeed": 40
+    }
+}
