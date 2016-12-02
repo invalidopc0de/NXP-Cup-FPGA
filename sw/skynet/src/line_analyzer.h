@@ -21,6 +21,7 @@ typedef struct {
 	int SampleOffset;
 
 	char StopDetectionEnabled;
+	char LineHistEnabled;
 
 	char PrintDebug;
 	char PrintLineDebug;
@@ -35,7 +36,7 @@ typedef struct {
 } LineAnalyzerParams;
 
 typedef struct {
-    int LastLinePos;    //0 for left, 1 for right
+    int LastLinePos;    //0 for left, 1 for right, 3 for neither
 } LineAnalyzerState;
 
 typedef struct {
