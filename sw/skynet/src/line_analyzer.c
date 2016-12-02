@@ -75,7 +75,7 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineAnalyzerState* l
 	//make sure we have edges
 	if (edge_points[1] > -1){
 		point_diff = edge_points[0]-edge_points[1];
-		if ((abs(point_diff) > params->PointDiff)&&(edge_points[0] > -1) {
+		if ((abs(point_diff) > params->PointDiff)&&(edge_points[0] > -1)) {
 			// We have two different edges
 			features->RightLineVisible = 1;
 			features->LeftLineVisible = 1;

@@ -6,6 +6,7 @@
  */
 
 #include "control_loop.h"
+#include <stdlib.h>
 
 #include <math.h>
 #include "motor_driver.h"
@@ -63,15 +64,40 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
     if (line1->LeftLineVisible || line1->RightLineVisible) {
         // We can only see one of the lines
 
+    	 // Calculate the error between the current center
+		// and the center we want.  < 0 == left, > 0 == right
+		float err = 0.0;
+
         // For now, lets just turn a decent amount
         if (line1->LeftLineVisible) 
         {
+        	err = (SERVO_MAX_RIGHT - SERVO_CTR) * (((float) line1->LeftLineLocation) / params->LineLength);
             //outputs->ServoDutyCycle = (SERVO_MAX_RIGHT + SERVO_CTR) / 2;
-        	outputs->ServoDutyCycle = (SERVO_MAX_RIGHT - SERVO_CTR) * (line1->LeftLineLocation/(params->LineLength/2));
+        	//outputs->ServoDutyCycle = fmin(((SERVO_MAX_RIGHT - SERVO_CTR) * (line1->LeftLineLocation/(params->LineLength/2))) + SERVO_CTR, SERVO_MAX_RIGHT);
         } else {
+        	err = (SERVO_MAX_LEFT - SERVO_CTR) * (((float) (params->LineLength - line1->RightLineLocation)) / params->LineLength);
+
             //outputs->ServoDutyCycle = (SERVO_MAX_LEFT + SERVO_CTR) / 2;
-        	outputs->ServoDutyCycle = (SERVO_CTR - SERVO_MAX_LEFT) * ((params->LineLength - line1->RightLineLocation)/(params->LineLength/2));;
+        	//outputs->ServoDutyCycle = fmax(((SERVO_MAX_LEFT - SERVO_CTR) * ((params->LineLength - line1->RightLineLocation)/(params->LineLength/2)) + SERVO_CTR), SERVO_MAX_LEFT);
         }
+
+    	float new_servo_pos = state->LastServoPos +
+    							params->Kp * (err - state->LastError) +
+    							params->Ki * (err + state->LastError)/2 + + SERVO_CTR;
+
+    	printf("Error: %.5f New Pos: %.5f\n", err, new_servo_pos);
+
+		// Clip
+		if (new_servo_pos > 0) {
+			new_servo_pos = fmin(new_servo_pos, SERVO_MAX_RIGHT);
+		} else {
+			new_servo_pos = fmax(new_servo_pos, SERVO_MAX_LEFT);
+		}
+
+		outputs->ServoDutyCycle = new_servo_pos;
+
+		state->LastServoPos = new_servo_pos;
+		state->LastError = err;
 
         // TODO add differential drive
         outputs->MotorDirection[0] = MOTOR_FORWARD;
@@ -86,6 +112,8 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
         // 4 way cross.  Just go straight
 
         outputs->ServoDutyCycle = SERVO_CTR;
+        state->LastServoPos = SERVO_CTR;
+        state->LastError = 0;
 
         outputs->MotorDirection[0] = MOTOR_FORWARD;
         outputs->MotorDirection[1] = MOTOR_FORWARD;

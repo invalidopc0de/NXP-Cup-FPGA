@@ -3,8 +3,8 @@ TARGET = skynet
 
 #
 CROSS_COMPILE = arm-linux-gnueabihf-
-CFLAGS = -static -g -Wall -Wno-unused-value  -I${SOCEDS_DEST_ROOT}/ip/altera/hps/altera_hps/hwlib/include -Ilibev
-LDFLAGS =  -g -Wall -lm
+CFLAGS = -static -g -Wall -Wno-unused-value -O1 -I${SOCEDS_DEST_ROOT}/ip/altera/hps/altera_hps/hwlib/include -Ilibev
+LDFLAGS =  -g -Wall -lm -O1
 CC = $(CROSS_COMPILE)gcc
 ARCH= arm
 

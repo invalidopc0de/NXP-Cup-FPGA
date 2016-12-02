@@ -32,7 +32,7 @@ typedef struct {
 
 typedef struct {
     float LastServoPos;
-    int LastError;
+    float LastError;
 } ControlLoopState;
 
 typedef struct {
