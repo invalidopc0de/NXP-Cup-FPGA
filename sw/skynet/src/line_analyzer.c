@@ -35,7 +35,7 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 	//value at the last edge
 	int last_edge_val = 0;
 	//shift register of points with maximum difference
-	int edge_points[2] = {15,15}; //--------------------------------------------------------
+	int edge_points[2] = {-1,-1}; //--------------------------------------------------------
 	//difference between resulting points from the edge finder
 	int point_diff = 0;
 
@@ -73,51 +73,60 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 		}
 	}
 	
-	point_diff = edge_points[0]-edge_points[1];
-	
-	if (point_diff > params->PointDiff) {
-		// We have two different edges
-		features->RightLineVisible = 1;
-		features->LeftLineVisible = 1;
-		//Left edge in 1
-		if (edge_points[0] > params->LineLength/2){
-			features->RightLineLocation = edge_points[1];
-			features->LeftLineLocation = edge_points[0];
-
-			if (params->PrintLineDebug) {
-				printf("Found right line at %d\n", edge_points[1]);
-				printf("Found left line at %d\n", edge_points[0]);
-			}
-		}
-		else{
-			features->RightLineLocation = edge_points[0];
-			features->LeftLineLocation = edge_points[1];
-
-			if (params->PrintLineDebug) {
-				printf("Found right line at %d\n", edge_points[0]);
-				printf("Found left line at %d\n", edge_points[1]);
-			}
-		}
-	} else {
-		// We have one edge, use edge_points[1]
-		//Right edge
-		if (edge_points[1] > params->LineLength/2){
+	//make sure we have edges
+	if (edge_points[1] > params->LineThreashold){
+		point_diff = edge_points[0]-edge_points[1];
+		if (point_diff > params->PointDiff) {
+			// We have two different edges
 			features->RightLineVisible = 1;
-			features->RightLineLocation = edge_points[1];
-
-			if (params->PrintLineDebug) {
-				printf("Found right line at %d\n", edge_points[1]);
-			}
-		}
-		//Left edge
-		else{
 			features->LeftLineVisible = 1;
-			features->LeftLineLocation = edge_points[1];
-
-			if (params->PrintLineDebug) {
-				printf("Found left line at %d\n", edge_points[1]);
+			//Left edge in 1
+			if (edge_points[0] > params->LineLength/2){
+				features->RightLineLocation = edge_points[1];
+				features->LeftLineLocation = edge_points[0];
+	
+				if (params->PrintLineDebug) {
+					printf("Found right line at %d\n", edge_points[1]);
+					printf("Found left line at %d\n", edge_points[0]);
+				}
+			}
+			else{
+				features->RightLineLocation = edge_points[0];
+				features->LeftLineLocation = edge_points[1];
+	
+				if (params->PrintLineDebug) {
+					printf("Found right line at %d\n", edge_points[0]);
+					printf("Found left line at %d\n", edge_points[1]);
+				}
+			}
+		} else {
+			// We have one edge, use edge_points[1]
+			//Right edge
+			if (edge_points[1] > params->LineLength/2){
+				features->LeftLineVisible = 0;
+				features->RightLineVisible = 1;
+				features->RightLineLocation = edge_points[1];
+	
+				if (params->PrintLineDebug) {
+					printf("Found right line at %d\n", edge_points[1]);
+				}
+			}
+			//Left edge
+			else{
+				features->RightLineVisible = 0;
+				features->LeftLineVisible = 1;
+				features->LeftLineLocation = edge_points[1];
+	
+				if (params->PrintLineDebug) {
+					printf("Found left line at %d\n", edge_points[1]);
+				}
 			}
 		}
+	}
+	//Oh no no edges!
+	else{
+		features->LeftLineVisible = 0;
+		features->RightLineVisible = 0;
 	}
 
 	if (params->PrintDebug) {
