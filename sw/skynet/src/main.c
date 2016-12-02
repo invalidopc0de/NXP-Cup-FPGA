@@ -24,7 +24,10 @@
 #include "camera_control.h"
 #include "camera_data.h"
 
-#define LINE_LENGTH 173
+#define LINE_LENGTH_QCIF	173
+#define LINE_LENGTH_VGA		700
+
+#define LINE_LENGTH LINE_LENGTH_QCIF
 
 #define LOOP_FREQ_HZ	50.0
 #define LOOP_PERIOD 	(1.0/LOOP_FREQ_HZ)
@@ -45,11 +48,15 @@ typedef struct {
 	mSGMDA_Bases_Type camera_data_status_base;
 
 	LineAnalyzerParams la_params;
+	LineAnalyzerState la_state;
 
 	ControlLoopParams cl_params;
 	ControlLoopState cl_state;
 
 	char camera_config_file[1024];
+
+	struct timespec time_start;
+	int time_records;
 } SkynetState;
 
 // Libev stuff
@@ -80,11 +87,20 @@ static void control_loop_cb (EV_P_ ev_timer *w, int revents)
 	// Get Camera line if available
 	if (camera_len > 0)
 	{
+		struct timespec time_end = {0,0};
+		clock_gettime(CLOCK_MONOTONIC, &time_end);
+
+		//printf("Loop Time: %.5f seconds\n",
+		//		   ((double)time_end.tv_sec + 1.0e-9*time_end.tv_nsec) -
+		//		   ((double)state->time_start.tv_sec + 1.0e-9*state->time_start.tv_nsec));
+
+		state->time_start = time_end;
+
 		state->la_params.LineLength = camera_len;
 		state->cl_params.LineLength = camera_len;
 
 		// Analyze the line for feature
-		AnalyzeLine(line, &state->la_params, &features);
+		AnalyzeLine(line, &state->la_params, &state->la_state,  &features);
 
 		state->cl_params.lines[0] = &features;
 
@@ -148,6 +164,7 @@ int readConfig(char *filename, SkynetState* state)
 	state->la_params.GNUPlotEnabled = cJSON_GetObjectItem(la_config, "GNUPlotEnabled")->valueint;
 	strncpy(state->la_params.GNUPlotFileName, cJSON_GetObjectItem(la_config, "GNUPlotFile")->valuestring, 1024);
 	state->la_params.PointDiff = cJSON_GetObjectItem(la_config, "PointDiff")->valueint;
+	state->la_params.LineHistEnabled = cJSON_GetObjectItem(la_config, "LineHistEnabled")->valueint;
 
 	cJSON *cl_config = cJSON_GetObjectItem(root, "control_loop");
 	state->cl_params.Kp = cJSON_GetObjectItem(cl_config, "Kp")->valuedouble;
@@ -225,6 +242,8 @@ int main(int argc, char *argv[]) {
 
 	// Assign state 
 	control_loop_watcher.data = &state;
+
+	clock_gettime(CLOCK_MONOTONIC, &state.time_start);
 
 	// initialise a timer watcher, then start it
 	ev_timer_init (&control_loop_watcher, control_loop_cb, 0., LOOP_PERIOD);

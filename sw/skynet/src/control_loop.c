@@ -59,15 +59,18 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
         outputs->MotorDutyCycle[0] = 30;
         outputs->MotorDutyCycle[1] = 30;
     } else */
-    	if (line1->LeftLineVisible || line1->RightLineVisible) {
+
+    if (line1->LeftLineVisible || line1->RightLineVisible) {
         // We can only see one of the lines
 
         // For now, lets just turn a decent amount
         if (line1->LeftLineVisible) 
         {
-            outputs->ServoDutyCycle = (SERVO_MAX_RIGHT + SERVO_CTR) / 2;
+            //outputs->ServoDutyCycle = (SERVO_MAX_RIGHT + SERVO_CTR) / 2;
+        	outputs->ServoDutyCycle = (SERVO_MAX_RIGHT - SERVO_CTR) * (line1->LeftLineLocation/(params->LineLength/2));
         } else {
-            outputs->ServoDutyCycle = (SERVO_MAX_LEFT + SERVO_CTR) / 2;
+            //outputs->ServoDutyCycle = (SERVO_MAX_LEFT + SERVO_CTR) / 2;
+        	outputs->ServoDutyCycle = (SERVO_CTR - SERVO_MAX_LEFT) * ((params->LineLength - line1->RightLineLocation)/(params->LineLength/2));;
         }
 
         // TODO add differential drive
