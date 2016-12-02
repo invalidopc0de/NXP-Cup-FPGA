@@ -102,8 +102,8 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineAnalyzerState* l
 		} else {
 			// We have one edge, use edge_points[1]
 			//Right edge
-			if (((lineState->LastLinePos = 1)&&(params->LineHistEnabled)) ||
-				((edge_points[1] > params->LineLength/2)&&(lineState->LastLinePos = 3)&&(params->LineHistEnabled)) ||
+			if (((lineState->LastLinePos == 1)&&(params->LineHistEnabled)) ||
+				((edge_points[1] > params->LineLength/2)&&(lineState->LastLinePos == 3)&&(params->LineHistEnabled)) ||
 				((edge_points[1] > params->LineLength/2)&&(params->LineHistEnabled == 0))){
 				features->LeftLineVisible = 0;
 				features->RightLineVisible = 1;
