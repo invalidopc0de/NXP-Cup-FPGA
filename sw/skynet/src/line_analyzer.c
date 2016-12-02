@@ -61,7 +61,7 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineAnalyzerState* l
 
 		int difference = line[i+params->SampleOffset] - line[i];
 
-		if ((abs(difference) > last_edge_val)) {
+		if ((abs(difference) > last_edge_val) && (abs(difference) > params->LineThreashold)) {
 			// Okay, we found an edge
 			//shift right
 			edge_points[0] = edge_points[1];
@@ -73,9 +73,9 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineAnalyzerState* l
 	}
 	
 	//make sure we have edges
-	if (edge_points[1] > params->LineThreashold){
+	if (edge_points[1] > -1){
 		point_diff = edge_points[0]-edge_points[1];
-		if (point_diff > params->PointDiff) {
+		if ((abs(point_diff) > params->PointDiff)&&(edge_points[0] > -1) {
 			// We have two different edges
 			features->RightLineVisible = 1;
 			features->LeftLineVisible = 1;
