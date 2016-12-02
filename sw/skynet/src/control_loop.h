@@ -31,7 +31,7 @@ typedef struct {
 } ControlLoopParams;
 
 typedef struct {
-    float LastServoPos;
+    float LastValue;
     float LastError;
 } ControlLoopState;
 
