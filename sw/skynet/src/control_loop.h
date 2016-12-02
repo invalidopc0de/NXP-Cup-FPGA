@@ -28,18 +28,22 @@ typedef struct {
 	char StopDetectionEnabled;
 
 	int	DefaultSpeed;
+	int FrameStraightDelay;
 } ControlLoopParams;
 
 typedef struct {
+	float FramesSinceLastLine;
+
+	float LastServoPos;
     float LastValue;
-    float LastError;
+    float LastError[2];
 } ControlLoopState;
 
 typedef struct {
 	char MotorDirection[2];
 	int MotorDutyCycle[2];
 
-	int ServoDutyCycle;
+	float ServoDutyCycle;
 } ControlLoopOutputs;
 
 int ControlLoopInit(ControlLoopState* state);

@@ -63,6 +63,7 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
 
     if (line1->LeftLineVisible || line1->RightLineVisible) {
         // We can only see one of the lines
+    	state->FramesSinceLastLine = 0;
 
     	 // Calculate the error between the current center
 		// and the center we want.  < 0 == left, > 0 == right
@@ -83,13 +84,15 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
 
 
 
-    	float new_value = state->LastValue +
-    							params->Kp * (err - state->LastError) +
-    							params->Ki * (err + state->LastError)/2;
+    	//float new_value = state->LastValue +
+    	//						params->Kp * (err - state->LastError) +
+    	//						params->Ki * (err + state->LastError)/2;
+
+    	float new_value = state->LastValue + (params->Kp * (err - state->LastError[1]))  +
+    	    							(params->Ki * (err + state->LastError[1])/2.0) +
+										(params->Kd * (err - 2.0*state->LastError[1] + state->LastError[2]));
 
     	float new_servo_pos = 0.0;
-
-    	printf("Error: %.5f New Value: %.5f\n", err, new_value);
 
 		// Clip
 		if (line1->LeftLineVisible) {
@@ -100,10 +103,14 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
 			new_servo_pos = fmax(new_servo_pos, SERVO_MAX_LEFT);
 		}
 
+		printf("Error: %.5f New Value: %.5f New Servo: %.5f \n", err, new_value, new_servo_pos);
+
 		outputs->ServoDutyCycle = new_servo_pos;
 
+		state->LastServoPos = new_servo_pos;
 		state->LastValue = new_value;
-		state->LastError = err;
+		state->LastError[2] = state->LastError[1];
+		state->LastError[1] = err;
 
         // TODO add differential drive
         outputs->MotorDirection[0] = MOTOR_FORWARD;
@@ -114,12 +121,24 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
     } else {
         // We can't see anything! Help
 
+
+
         // Actually, this will probably mean we're at the 
         // 4 way cross.  Just go straight
 
-        outputs->ServoDutyCycle = SERVO_CTR;
-        state->LastValue = 0;
-        state->LastError = 0;
+        //outputs->ServoDutyCycle = SERVO_CTR;
+    	if (state->FramesSinceLastLine > params->FrameStraightDelay)
+    	{
+    		outputs->ServoDutyCycle = SERVO_CTR;
+    	} else {
+    		outputs->ServoDutyCycle = state->LastServoPos;
+    		state->FramesSinceLastLine++;
+    	}
+
+
+        state->LastValue = 0.0;
+        state->LastError[2] = state->LastError[1];
+        state->LastError[1] = 0;
 
         outputs->MotorDirection[0] = MOTOR_FORWARD;
         outputs->MotorDirection[1] = MOTOR_FORWARD;

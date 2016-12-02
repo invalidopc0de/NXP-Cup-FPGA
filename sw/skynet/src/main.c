@@ -105,11 +105,12 @@ static void control_loop_cb (EV_P_ ev_timer *w, int revents)
 
 		state->cl_params.lines[0] = &features;
 
+		// Calculate new outputs
+		ControlLoopCalc(&state->cl_params, &state->cl_state, &output);
 
-		if (*((uint32_t *)state->dipsw_base) & KILLSW_MASK){
-			// Calculate new outputs
-			ControlLoopCalc(&state->cl_params, &state->cl_state, &output);
-		} else {
+		if (!(*((uint32_t *)state->dipsw_base) & KILLSW_MASK)){
+
+			memset(&output, 0, sizeof(ControlLoopOutputs));
 			output.ServoDutyCycle = SERVO_CTR;
 		}
 
@@ -173,6 +174,7 @@ int readConfig(char *filename, SkynetState* state)
 	state->cl_params.Kd = cJSON_GetObjectItem(cl_config, "Kd")->valuedouble;
 	state->cl_params.StopDetectionEnabled = cJSON_GetObjectItem(cl_config, "StopDetectionEnabled")->valueint;
 	state->cl_params.DefaultSpeed = cJSON_GetObjectItem(cl_config, "DefaultSpeed")->valueint;
+	state->cl_params.FrameStraightDelay = cJSON_GetObjectItem(cl_config, "FrameStraightDelay")->valueint;
 
 	cJSON_Delete(root);
 
