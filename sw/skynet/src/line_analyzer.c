@@ -49,7 +49,7 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineAnalyzerState* l
 	}
 
 
-	for (i = params->StartOffset; i < params->LineLength - params->EndOffset; i++)
+	for (i = params->StartOffset; i < ((params->LineLength - params->EndOffset) - params->SampleOffset); i++)
 	{
 		if (params->PrintDebug) {
 			printf("%i\n", line[i]);

@@ -102,6 +102,7 @@ static void control_loop_cb (EV_P_ ev_timer *w, int revents)
 		// Analyze the line for feature
 		AnalyzeLine(line, &state->la_params, &state->la_state,  &features);
 
+
 		state->cl_params.lines[0] = &features;
 
 
