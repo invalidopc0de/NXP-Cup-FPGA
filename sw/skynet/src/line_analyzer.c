@@ -28,7 +28,7 @@ int LineAnalyzerInit(LineAnalyzerParams* params)
 	return 0;
 }
 
-int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* features)
+int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineAnalyzerState* lineState, LineFeatures* features)
 {
 	//uint32_t sample;
 	int i = 0;
@@ -59,7 +59,6 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 			fprintf(params->GNUPlotFile, "%i %i\n",i, line[i]);
 		}
 
-		// TODO: Sample offset?-------------------------------------------------------------------
 		int difference = line[i+params->SampleOffset] - line[i];
 
 		if ((abs(difference) > last_edge_val)) {
@@ -80,6 +79,7 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 			// We have two different edges
 			features->RightLineVisible = 1;
 			features->LeftLineVisible = 1;
+			lineState->LastLinePos = 3;
 			//Left edge in 1
 			if (edge_points[0] > params->LineLength/2){
 				features->RightLineLocation = edge_points[1];
@@ -102,11 +102,13 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 		} else {
 			// We have one edge, use edge_points[1]
 			//Right edge
-			if (edge_points[1] > params->LineLength/2){
+			if (((lineState->LastLinePos = 1)&&(params->LineHistEnabled)) ||
+				((edge_points[1] > params->LineLength/2)&&(lineState->LastLinePos = 3)&&(params->LineHistEnabled)) ||
+				((edge_points[1] > params->LineLength/2)&&(params->LineHistEnabled == 0))){
 				features->LeftLineVisible = 0;
 				features->RightLineVisible = 1;
 				features->RightLineLocation = edge_points[1];
-	
+				lineState->LastLinePos = 1;
 				if (params->PrintLineDebug) {
 					printf("Found right line at %d\n", edge_points[1]);
 				}
@@ -116,7 +118,7 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 				features->RightLineVisible = 0;
 				features->LeftLineVisible = 1;
 				features->LeftLineLocation = edge_points[1];
-	
+				lineState->LastLinePos  = 0;
 				if (params->PrintLineDebug) {
 					printf("Found left line at %d\n", edge_points[1]);
 				}
@@ -127,6 +129,7 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 	else{
 		features->LeftLineVisible = 0;
 		features->RightLineVisible = 0;
+		lineState->LastLinePos = 3;
 	}
 
 	if (params->PrintDebug) {
