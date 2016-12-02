@@ -64,8 +64,8 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineAnalyzerState* l
 		if ((abs(difference) > last_edge_val)) {
 			// Okay, we found an edge
 			//shift right
-			edge_points[1] = edge_points[0];
-			edge_points[0] = i;
+			edge_points[0] = edge_points[1];
+			edge_points[1] = i;
 			//set new max value
 			last_edge_val = abs(difference);
 
