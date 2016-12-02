@@ -79,8 +79,8 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 		// We have two different edges
 		features->RightLineVisible = 1;
 		features->LeftLineVisible = 1;
-		//Left edge in 0
-		if (edge_points[0] < params->LineLength/2){
+		//Left edge in 1
+		if (edge_points[0] > params->LineLength/2){
 			features->RightLineLocation = edge_points[1];
 			features->LeftLineLocation = edge_points[0];
 
@@ -101,7 +101,7 @@ int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* featur
 	} else {
 		// We have one edge, use edge_points[1]
 		//Right edge
-		if (edge_points[1] < params->LineLength/2){
+		if (edge_points[1] > params->LineLength/2){
 			features->RightLineVisible = 1;
 			features->RightLineLocation = edge_points[1];
 
