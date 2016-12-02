@@ -9,6 +9,7 @@
 #define SRC_LINE_ANALYZER_H_
 
 #include <stdint.h>
+#include <stdio.h>
 
 #define LINEANALYZER_SUCCESS	0
 #define LINEANALYZER_ERROR 		-1
@@ -22,6 +23,15 @@ typedef struct {
 	char StopDetectionEnabled;
 
 	char PrintDebug;
+	char PrintLineDebug;
+
+	int StartOffset;
+	int EndOffset;
+	int PointDiff;
+
+	char GNUPlotEnabled;
+	char GNUPlotFileName[1024];
+	FILE* GNUPlotFile;
 } LineAnalyzerParams;
 
 typedef struct {
@@ -33,6 +43,8 @@ typedef struct {
 
 	char StopLineVisible;
 } LineFeatures;
+
+int LineAnalyzerInit(LineAnalyzerParams* params);
 
 int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* features);
 

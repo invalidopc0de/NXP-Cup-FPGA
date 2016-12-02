@@ -23,7 +23,7 @@ void* FPGAMapMemory(int *fdPtr)
 
 	if((*fdPtr = open("/dev/mem", (O_RDWR | O_SYNC))) == -1) {
 		printf("ERROR: could not open \"/dev/mem\"...\n" );
-		return -1;
+		return NULL;
 	}
 
 	virtual_base = mmap(NULL, HW_REGS_SPAN, (PROT_READ | PROT_WRITE), MAP_SHARED, *fdPtr, HW_REGS_BASE);
@@ -31,7 +31,7 @@ void* FPGAMapMemory(int *fdPtr)
 	if(virtual_base == MAP_FAILED) {
 		printf("ERROR: mmap() failed...\n");
 		close(*fdPtr);
-		return -1;
+		return NULL;
 	}
 
 	return virtual_base;

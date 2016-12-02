@@ -48,6 +48,8 @@ typedef struct {
 
 	ControlLoopParams cl_params;
 	ControlLoopState cl_state;
+
+	char camera_config_file[1024];
 } SkynetState;
 
 // Libev stuff
@@ -132,12 +134,20 @@ int readConfig(char *filename, SkynetState* state)
 	cJSON * root = cJSON_Parse(buffer);
 
 	// Pull out interesting configs
+	strncpy(state->camera_config_file, cJSON_GetObjectItem(root, "camera_config")->valuestring, 1024);
+
 	cJSON *la_config = cJSON_GetObjectItem(root, "line_analyzer");
 	state->la_params.LineThreashold = cJSON_GetObjectItem(la_config, "LineThreshold")->valueint;
 	state->la_params.LineTimeout = cJSON_GetObjectItem(la_config, "LineTimeout")->valueint;
 	state->la_params.StopDetectionEnabled = cJSON_GetObjectItem(la_config, "StopDetectionEnabled")->valueint;
 	state->la_params.PrintDebug = cJSON_GetObjectItem(la_config, "PrintDebug")->valueint;
+	state->la_params.PrintLineDebug = cJSON_GetObjectItem(la_config, "PrintLineDebug")->valueint;
 	state->la_params.SampleOffset = cJSON_GetObjectItem(la_config, "SampleOffset")->valueint;
+	state->la_params.StartOffset = cJSON_GetObjectItem(la_config, "StartOffset")->valueint;
+	state->la_params.EndOffset = cJSON_GetObjectItem(la_config, "EndOffset")->valueint;
+	state->la_params.GNUPlotEnabled = cJSON_GetObjectItem(la_config, "GNUPlotEnabled")->valueint;
+	strncpy(state->la_params.GNUPlotFileName, cJSON_GetObjectItem(la_config, "GNUPlotFile")->valuestring, 1024);
+	state->la_params.PointDiff = cJSON_GetObjectItem(la_config, "PointDiff")->valueint;
 
 	cJSON *cl_config = cJSON_GetObjectItem(root, "control_loop");
 	state->cl_params.Kp = cJSON_GetObjectItem(cl_config, "Kp")->valuedouble;
@@ -161,7 +171,7 @@ int main(int argc, char *argv[]) {
 	memset(&state, 0, sizeof(SkynetState));
 
 	if (argc != 2) {
-		printf("Please specify a config file!");
+		printf("Please specify a config file!\n");
 		return -1;
 	}
 
@@ -185,11 +195,26 @@ int main(int argc, char *argv[]) {
 	SetDutyCycle(state.motor1_base, 40.0, 0);
 
 	// Load config
-	readConfig(argv[1], &state);
+	if (readConfig(argv[1], &state) < 0)
+	{
+		printf("Error reading config!\n");
+		return -1;
+	}
+
+	if (LineAnalyzerInit(&state.la_params) < 0)
+	{
+		printf("Error initializing line analyzer\n");
+		return -2;
+	}
 
 	// Reset Camera
-	CameraReset(state.camera_control_base);
+	if (CameraLoadConfig(state.camera_control_base, state.camera_config_file) < 0)
+	{
+		printf("Error loading camera config!\n");
+		return -3;
+	}
 
+	// Clear camera data
 	memset(state.camera_data_base, 0, LINE_LENGTH);
 
 	// Add camera
