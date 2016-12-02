@@ -35,6 +35,10 @@ typedef struct {
 } LineAnalyzerParams;
 
 typedef struct {
+    int LastLinePos;    //0 for left, 1 for right
+} LineAnalyzerState;
+
+typedef struct {
 	char LeftLineVisible;
 	int LeftLineLocation;
 
@@ -46,6 +50,6 @@ typedef struct {
 
 int LineAnalyzerInit(LineAnalyzerParams* params);
 
-int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineFeatures* features);
+int AnalyzeLine(uint32_t* line, LineAnalyzerParams* params, LineAnalyzerState* lineState, LineFeatures* features);
 
 #endif /* SRC_LINE_ANALYZER_H_ */
