@@ -1,4 +1,4 @@
-# NXP-Cup-FPGA
+# NXP Cup FPGA
 
 ## Overview
 
@@ -6,19 +6,19 @@ This project involved directing the NXP (Freescale) Cup Car to drive around a wh
 
 ## Project Directory Layout
 
-**doc** Project Documentation (Diagrams, Whitepapers, Datasheets)
+**doc** - Project Documentation (Diagrams, Whitepapers, Datasheets)
 
-**hw** Hardware Schematics and PCBs
+**hw** - Hardware Schematics and PCBs
 
-**ip** Generated IP Cores (Altera MegaWizard)
+**ip** - Generated IP Cores (Altera MegaWizard)
 
-**mech** Mechanical CAD models 
+**mech**  - Mechanical CAD models 
 
-**prj** Tool specific files (Quartus Project Files, etc)
+**prj** - Tool specific files (Quartus Project Files, etc)
 
-**sim** Simulations for Programmable Logic (Testbenches)
+**sim** - Simulations for Programmable Logic (Testbenches)
 
-**src** Source for Programmable Logic
+**src** - Source for Programmable Logic
 
-**sw** Software source code
+**sw** - Software source code
 
