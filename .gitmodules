@@ -1,0 +1,6 @@
+[submodule "sw/skynet/libev"]
+	path = sw/skynet/libev
+	url = https://github.com/enki/libev
+[submodule "sw/skynet/cJSON"]
+	path = sw/skynet/cJSON
+	url = https://github.com/DaveGamble/cJSON.git
