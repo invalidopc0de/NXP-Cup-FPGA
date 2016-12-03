@@ -7,16 +7,16 @@
 
 `timescale 1 ps / 1 ps
 module soc_system_avalon_st_adapter #(
-		parameter inBitsPerSymbol = 32,
+		parameter inBitsPerSymbol = 8,
 		parameter inUsePackets    = 1,
-		parameter inDataWidth     = 32,
-		parameter inChannelWidth  = 0,
+		parameter inDataWidth     = 8,
+		parameter inChannelWidth  = 2,
 		parameter inErrorWidth    = 0,
 		parameter inUseEmptyPort  = 0,
 		parameter inUseValid      = 1,
 		parameter inUseReady      = 0,
 		parameter inReadyLatency  = 0,
-		parameter outDataWidth    = 32,
+		parameter outDataWidth    = 8,
 		parameter outChannelWidth = 0,
 		parameter outErrorWidth   = 0,
 		parameter outUseEmptyPort = 0,
@@ -24,18 +24,24 @@ module soc_system_avalon_st_adapter #(
 		parameter outUseReady     = 1,
 		parameter outReadyLatency = 0
 	) (
-		input  wire        in_clk_0_clk,        // in_clk_0.clk
-		input  wire        in_rst_0_reset,      // in_rst_0.reset
-		input  wire [31:0] in_0_data,           //     in_0.data
-		input  wire        in_0_valid,          //         .valid
-		input  wire        in_0_startofpacket,  //         .startofpacket
-		input  wire        in_0_endofpacket,    //         .endofpacket
-		output wire [31:0] out_0_data,          //    out_0.data
-		output wire        out_0_valid,         //         .valid
-		input  wire        out_0_ready,         //         .ready
-		output wire        out_0_startofpacket, //         .startofpacket
-		output wire        out_0_endofpacket    //         .endofpacket
+		input  wire       in_clk_0_clk,        // in_clk_0.clk
+		input  wire       in_rst_0_reset,      // in_rst_0.reset
+		input  wire [7:0] in_0_data,           //     in_0.data
+		input  wire       in_0_valid,          //         .valid
+		input  wire       in_0_startofpacket,  //         .startofpacket
+		input  wire       in_0_endofpacket,    //         .endofpacket
+		input  wire [1:0] in_0_channel,        //         .channel
+		output wire [7:0] out_0_data,          //    out_0.data
+		output wire       out_0_valid,         //         .valid
+		input  wire       out_0_ready,         //         .ready
+		output wire       out_0_startofpacket, //         .startofpacket
+		output wire       out_0_endofpacket    //         .endofpacket
 	);
+
+	wire        channel_adapter_0_out_valid;         // channel_adapter_0:out_valid -> timing_adapter_0:in_valid
+	wire  [7:0] channel_adapter_0_out_data;          // channel_adapter_0:out_data -> timing_adapter_0:in_data
+	wire        channel_adapter_0_out_startofpacket; // channel_adapter_0:out_startofpacket -> timing_adapter_0:in_startofpacket
+	wire        channel_adapter_0_out_endofpacket;   // channel_adapter_0:out_endofpacket -> timing_adapter_0:in_endofpacket
 
 	generate
 		// If any of the display statements (or deliberately broken
@@ -43,7 +49,7 @@ module soc_system_avalon_st_adapter #(
 		// has been instantiated this module with a set of parameters different
 		// from those it was generated for.  This will usually result in a
 		// non-functioning system.
-		if (inBitsPerSymbol != 32)
+		if (inBitsPerSymbol != 8)
 		begin
 			initial begin
 				$display("Generated module instantiated with wrong parameters");
@@ -61,7 +67,7 @@ module soc_system_avalon_st_adapter #(
 			instantiated_with_wrong_parameters_error_see_comment_above
 					inusepackets_check ( .error(1'b1) );
 		end
-		if (inDataWidth != 32)
+		if (inDataWidth != 8)
 		begin
 			initial begin
 				$display("Generated module instantiated with wrong parameters");
@@ -70,7 +76,7 @@ module soc_system_avalon_st_adapter #(
 			instantiated_with_wrong_parameters_error_see_comment_above
 					indatawidth_check ( .error(1'b1) );
 		end
-		if (inChannelWidth != 0)
+		if (inChannelWidth != 2)
 		begin
 			initial begin
 				$display("Generated module instantiated with wrong parameters");
@@ -124,7 +130,7 @@ module soc_system_avalon_st_adapter #(
 			instantiated_with_wrong_parameters_error_see_comment_above
 					inreadylatency_check ( .error(1'b1) );
 		end
-		if (outDataWidth != 32)
+		if (outDataWidth != 8)
 		begin
 			initial begin
 				$display("Generated module instantiated with wrong parameters");
@@ -189,18 +195,32 @@ module soc_system_avalon_st_adapter #(
 		end
 	endgenerate
 
+	soc_system_avalon_st_adapter_channel_adapter_0 channel_adapter_0 (
+		.clk               (in_clk_0_clk),                        //   clk.clk
+		.reset_n           (~in_rst_0_reset),                     // reset.reset_n
+		.in_data           (in_0_data),                           //    in.data
+		.in_valid          (in_0_valid),                          //      .valid
+		.in_startofpacket  (in_0_startofpacket),                  //      .startofpacket
+		.in_endofpacket    (in_0_endofpacket),                    //      .endofpacket
+		.in_channel        (in_0_channel),                        //      .channel
+		.out_data          (channel_adapter_0_out_data),          //   out.data
+		.out_valid         (channel_adapter_0_out_valid),         //      .valid
+		.out_startofpacket (channel_adapter_0_out_startofpacket), //      .startofpacket
+		.out_endofpacket   (channel_adapter_0_out_endofpacket)    //      .endofpacket
+	);
+
 	soc_system_avalon_st_adapter_timing_adapter_0 timing_adapter_0 (
-		.clk               (in_clk_0_clk),        //   clk.clk
-		.reset_n           (~in_rst_0_reset),     // reset.reset_n
-		.in_data           (in_0_data),           //    in.data
-		.in_valid          (in_0_valid),          //      .valid
-		.in_startofpacket  (in_0_startofpacket),  //      .startofpacket
-		.in_endofpacket    (in_0_endofpacket),    //      .endofpacket
-		.out_data          (out_0_data),          //   out.data
-		.out_valid         (out_0_valid),         //      .valid
-		.out_ready         (out_0_ready),         //      .ready
-		.out_startofpacket (out_0_startofpacket), //      .startofpacket
-		.out_endofpacket   (out_0_endofpacket)    //      .endofpacket
+		.clk               (in_clk_0_clk),                        //   clk.clk
+		.reset_n           (~in_rst_0_reset),                     // reset.reset_n
+		.in_data           (channel_adapter_0_out_data),          //    in.data
+		.in_valid          (channel_adapter_0_out_valid),         //      .valid
+		.in_startofpacket  (channel_adapter_0_out_startofpacket), //      .startofpacket
+		.in_endofpacket    (channel_adapter_0_out_endofpacket),   //      .endofpacket
+		.out_data          (out_0_data),                          //   out.data
+		.out_valid         (out_0_valid),                         //      .valid
+		.out_ready         (out_0_ready),                         //      .ready
+		.out_startofpacket (out_0_startofpacket),                 //      .startofpacket
+		.out_endofpacket   (out_0_endofpacket)                    //      .endofpacket
 	);
 
 endmodule

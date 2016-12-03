@@ -1,12 +1,15 @@
 
 module soc_system (
 	button_pio_external_connection_export,
-	camera_pins_adc_convst_pin,
-	camera_pins_adc_sck_pin,
-	camera_pins_adc_sdi_pin,
-	camera_pins_adc_sdo_pin,
-	camera_pins_camera_clk_pin,
-	camera_pins_camera_si_pin,
+	camera_pins_soic,
+	camera_pins_soid,
+	camera_pins_reset,
+	camera_pins_pwdn,
+	camera_pins_vsync,
+	camera_pins_href,
+	camera_pins_pclk,
+	camera_pins_xclk,
+	camera_pins_data,
 	clk_clk,
 	dipsw_pio_external_connection_export,
 	hps_0_f2h_cold_reset_req_reset_n,
@@ -79,17 +82,24 @@ module soc_system (
 	memory_mem_odt,
 	memory_mem_dm,
 	memory_oct_rzqin,
-	motor_driver_0_pins_pin_a,
-	motor_driver_0_pins_pin_b,
-	reset_reset_n);	
+	motor_driver_a_pins_pin_a,
+	motor_driver_a_pins_pin_b,
+	motor_driver_b_pins_pin_a,
+	motor_driver_b_pins_pin_b,
+	reset_reset_n,
+	servo_driver_pins_pin_a,
+	servo_driver_pins_pin_b);	
 
 	input	[3:0]	button_pio_external_connection_export;
-	output		camera_pins_adc_convst_pin;
-	output		camera_pins_adc_sck_pin;
-	output		camera_pins_adc_sdi_pin;
-	input		camera_pins_adc_sdo_pin;
-	output		camera_pins_camera_clk_pin;
-	output		camera_pins_camera_si_pin;
+	output		camera_pins_soic;
+	inout		camera_pins_soid;
+	output		camera_pins_reset;
+	output		camera_pins_pwdn;
+	input		camera_pins_vsync;
+	input		camera_pins_href;
+	input		camera_pins_pclk;
+	output		camera_pins_xclk;
+	input	[7:0]	camera_pins_data;
 	input		clk_clk;
 	input	[3:0]	dipsw_pio_external_connection_export;
 	input		hps_0_f2h_cold_reset_req_reset_n;
@@ -162,7 +172,11 @@ module soc_system (
 	output		memory_mem_odt;
 	output	[3:0]	memory_mem_dm;
 	input		memory_oct_rzqin;
-	output		motor_driver_0_pins_pin_a;
-	output		motor_driver_0_pins_pin_b;
+	output		motor_driver_a_pins_pin_a;
+	output		motor_driver_a_pins_pin_b;
+	output		motor_driver_b_pins_pin_a;
+	output		motor_driver_b_pins_pin_b;
 	input		reset_reset_n;
+	output		servo_driver_pins_pin_a;
+	output		servo_driver_pins_pin_b;
 endmodule

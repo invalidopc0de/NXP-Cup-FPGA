@@ -26,7 +26,7 @@ entity line_scan_camera_st is
 		camera_si              : out std_logic;                                        --          .camera_si_pin
 		camera_clk             : out std_logic;                                        --          .camera_clk_in
 		
-		data_out_data          : out std_logic_vector(31 downto 0);                     --  data_out.data
+		data_out_data          : out std_logic_vector(7 downto 0);                     --  data_out.data
 		data_out_valid         : out std_logic;                                        --          .valid
 		data_out_startofpacket : out std_logic;                                        --          .startofpacket
 		data_out_endofpacket   : out std_logic;                                        --          .endofpacket
@@ -102,7 +102,7 @@ begin
     data_out_valid <= camera_out.data_valid;
     data_out_startofpacket <= camera_out.data_sof;
     data_out_endofpacket <= camera_out.data_eof;
-    data_out_data(11 downto 0) <= camera_out.sensor_data;
+    data_out_data(7 downto 0) <= camera_out.sensor_data(11 downto 4);
 
     -- Ignore for now
 	control_readdata <= "00000000000000000000000000000000";

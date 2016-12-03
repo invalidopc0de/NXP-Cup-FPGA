@@ -112,16 +112,28 @@ int ControlLoopCalc(ControlLoopParams* params, ControlLoopState* state, ControlL
 		state->LastError[2] = state->LastError[1];
 		state->LastError[1] = err;
 
-        // TODO add differential drive
         outputs->MotorDirection[0] = MOTOR_FORWARD;
         outputs->MotorDirection[1] = MOTOR_FORWARD;
 
-        outputs->MotorDutyCycle[0] = params->DefaultSpeed;
-        outputs->MotorDutyCycle[1] = params->DefaultSpeed;
+        if (params->DiffSteering) {
+			if (line1->LeftLineVisible) {
+				outputs->MotorDutyCycle[0] = fmin(params->DefaultSpeed * ((1-new_value) * params->DiffSteeringFactor) , params->DefaultSpeed);
+				outputs->MotorDutyCycle[1] = params->DefaultSpeed;
+			} else {
+				outputs->MotorDutyCycle[0] = params->DefaultSpeed;
+				outputs->MotorDutyCycle[1] = fmin(params->DefaultSpeed * ((1-new_value) * params->DiffSteeringFactor), params->DefaultSpeed);
+			}
+    	} else {
+    		outputs->MotorDutyCycle[0] = params->DefaultSpeed;
+    		outputs->MotorDutyCycle[1] = params->DefaultSpeed;
+    	}
+
+		if (params->AutoSpeedControl) {
+			outputs->MotorDutyCycle[0] =  outputs->MotorDutyCycle[0] - (params->AutoSpeedRange * new_value);
+			outputs->MotorDutyCycle[1] = outputs->MotorDutyCycle[1] - (params->AutoSpeedRange * new_value);
+		}
     } else {
         // We can't see anything! Help
-
-
 
         // Actually, this will probably mean we're at the 
         // 4 way cross.  Just go straight

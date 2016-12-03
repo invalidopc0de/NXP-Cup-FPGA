@@ -29,6 +29,11 @@ typedef struct {
 
 	int	DefaultSpeed;
 	int FrameStraightDelay;
+	char DiffSteering;
+	float DiffSteeringFactor;
+
+	char AutoSpeedControl;
+	float AutoSpeedRange;
 } ControlLoopParams;
 
 typedef struct {

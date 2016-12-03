@@ -175,6 +175,10 @@ int readConfig(char *filename, SkynetState* state)
 	state->cl_params.StopDetectionEnabled = cJSON_GetObjectItem(cl_config, "StopDetectionEnabled")->valueint;
 	state->cl_params.DefaultSpeed = cJSON_GetObjectItem(cl_config, "DefaultSpeed")->valueint;
 	state->cl_params.FrameStraightDelay = cJSON_GetObjectItem(cl_config, "FrameStraightDelay")->valueint;
+	state->cl_params.DiffSteering = cJSON_GetObjectItem(cl_config, "DiffSteering")->valueint;
+	state->cl_params.DiffSteeringFactor = cJSON_GetObjectItem(cl_config, "DiffSteeringFactor")->valuedouble;
+	state->cl_params.AutoSpeedControl = cJSON_GetObjectItem(cl_config, "AutoSpeedControl")->valueint;
+	state->cl_params.AutoSpeedRange = cJSON_GetObjectItem(cl_config, "AutoSpeedRange")->valuedouble;
 
 	cJSON_Delete(root);
 

@@ -29,7 +29,6 @@ entity motor_driver_avalon is
 		avs_s0_readdata    : out std_logic_vector(31 downto 0);                    --       .readdata
 		avs_s0_write       : in  std_logic                     := '0';             --       .write
 		avs_s0_writedata   : in  std_logic_vector(31 downto 0) := (others => '0'); --       .writedata
-		avs_s0_waitrequest : out std_logic;                                         --       .waitrequest
 		motor_pin_a        : out std_logic;                                         -- output_pins.pin_a
 		motor_pin_b        : out std_logic                                         --       .pin_b
 	);
@@ -67,7 +66,6 @@ architecture rtl of motor_driver_avalon is
 
 		-- Avalon stuff
 		readdata    : std_logic_vector(31 downto 0);
-		waitrequest : std_logic;
 
         state       : motor_driver_state;
     end record;
@@ -84,7 +82,6 @@ architecture rtl of motor_driver_avalon is
 		enable1 => '0',
 
 		readdata => (others => '0'),
-		waitrequest => '0',
 
         state => RESET
     );
@@ -94,8 +91,6 @@ begin
 
 	-- Assign outputs
 	avs_s0_readdata <= r.readdata;
-
-	avs_s0_waitrequest <= r.waitrequest;
 
 	-- PWM channel 0 module instatiation
 	pwm_chan0_inst : component pwm
@@ -152,14 +147,14 @@ begin
 					case (avs_s0_address) is 
 						when X"00" => 
 							v.readdata(0) := r.direction;
-						when X"04" =>
+						when X"01" =>
 							v.readdata(bits_resolution-1 downto 0) := r.duty_cycle;
 						when others =>
 							v.readdata := (others => '0');
 					end case;
 				end if;
 
-				if (avs_s0_write = '1') then 
+				if (avs_s0_write = '1' ) then 
 					case (avs_s0_address) is 
 						when X"00" => 
 							v.direction := avs_s0_writedata(0);
@@ -172,7 +167,7 @@ begin
 								v.duty_cycle1 :=  r.duty_cycle;
 							end if;
 							v.state := WRITE_DUTY;
-						when X"04" =>
+						when X"01" =>
 							if (r.direction = '0') then 
 								v.duty_cycle0 := avs_s0_writedata(bits_resolution-1 downto 0);
 								v.duty_cycle1 := (others => '0');

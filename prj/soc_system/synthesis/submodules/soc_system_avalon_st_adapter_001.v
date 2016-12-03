@@ -7,9 +7,9 @@
 
 `timescale 1 ps / 1 ps
 module soc_system_avalon_st_adapter_001 #(
-		parameter inBitsPerSymbol = 32,
+		parameter inBitsPerSymbol = 8,
 		parameter inUsePackets    = 1,
-		parameter inDataWidth     = 32,
+		parameter inDataWidth     = 8,
 		parameter inChannelWidth  = 0,
 		parameter inErrorWidth    = 0,
 		parameter inUseEmptyPort  = 0,
@@ -19,22 +19,24 @@ module soc_system_avalon_st_adapter_001 #(
 		parameter outDataWidth    = 32,
 		parameter outChannelWidth = 0,
 		parameter outErrorWidth   = 0,
-		parameter outUseEmptyPort = 0,
+		parameter outUseEmptyPort = 1,
 		parameter outUseValid     = 1,
-		parameter outUseReady     = 0,
+		parameter outUseReady     = 1,
 		parameter outReadyLatency = 0
 	) (
 		input  wire        in_clk_0_clk,        // in_clk_0.clk
 		input  wire        in_rst_0_reset,      // in_rst_0.reset
-		input  wire [31:0] in_0_data,           //     in_0.data
+		input  wire [7:0]  in_0_data,           //     in_0.data
 		input  wire        in_0_valid,          //         .valid
 		output wire        in_0_ready,          //         .ready
 		input  wire        in_0_startofpacket,  //         .startofpacket
 		input  wire        in_0_endofpacket,    //         .endofpacket
 		output wire [31:0] out_0_data,          //    out_0.data
 		output wire        out_0_valid,         //         .valid
+		input  wire        out_0_ready,         //         .ready
 		output wire        out_0_startofpacket, //         .startofpacket
-		output wire        out_0_endofpacket    //         .endofpacket
+		output wire        out_0_endofpacket,   //         .endofpacket
+		output wire [1:0]  out_0_empty          //         .empty
 	);
 
 	generate
@@ -43,7 +45,7 @@ module soc_system_avalon_st_adapter_001 #(
 		// has been instantiated this module with a set of parameters different
 		// from those it was generated for.  This will usually result in a
 		// non-functioning system.
-		if (inBitsPerSymbol != 32)
+		if (inBitsPerSymbol != 8)
 		begin
 			initial begin
 				$display("Generated module instantiated with wrong parameters");
@@ -61,7 +63,7 @@ module soc_system_avalon_st_adapter_001 #(
 			instantiated_with_wrong_parameters_error_see_comment_above
 					inusepackets_check ( .error(1'b1) );
 		end
-		if (inDataWidth != 32)
+		if (inDataWidth != 8)
 		begin
 			initial begin
 				$display("Generated module instantiated with wrong parameters");
@@ -151,7 +153,7 @@ module soc_system_avalon_st_adapter_001 #(
 			instantiated_with_wrong_parameters_error_see_comment_above
 					outerrorwidth_check ( .error(1'b1) );
 		end
-		if (outUseEmptyPort != 0)
+		if (outUseEmptyPort != 1)
 		begin
 			initial begin
 				$display("Generated module instantiated with wrong parameters");
@@ -169,7 +171,7 @@ module soc_system_avalon_st_adapter_001 #(
 			instantiated_with_wrong_parameters_error_see_comment_above
 					outusevalid_check ( .error(1'b1) );
 		end
-		if (outUseReady != 0)
+		if (outUseReady != 1)
 		begin
 			initial begin
 				$display("Generated module instantiated with wrong parameters");
@@ -189,7 +191,7 @@ module soc_system_avalon_st_adapter_001 #(
 		end
 	endgenerate
 
-	soc_system_avalon_st_adapter_001_timing_adapter_0 timing_adapter_0 (
+	soc_system_avalon_st_adapter_001_data_format_adapter_0 data_format_adapter_0 (
 		.clk               (in_clk_0_clk),        //   clk.clk
 		.reset_n           (~in_rst_0_reset),     // reset.reset_n
 		.in_data           (in_0_data),           //    in.data
@@ -199,8 +201,10 @@ module soc_system_avalon_st_adapter_001 #(
 		.in_endofpacket    (in_0_endofpacket),    //      .endofpacket
 		.out_data          (out_0_data),          //   out.data
 		.out_valid         (out_0_valid),         //      .valid
+		.out_ready         (out_0_ready),         //      .ready
 		.out_startofpacket (out_0_startofpacket), //      .startofpacket
-		.out_endofpacket   (out_0_endofpacket)    //      .endofpacket
+		.out_endofpacket   (out_0_endofpacket),   //      .endofpacket
+		.out_empty         (out_0_empty)          //      .empty
 	);
 
 endmodule

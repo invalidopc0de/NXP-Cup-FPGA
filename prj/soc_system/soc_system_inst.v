@@ -1,11 +1,14 @@
 	soc_system u0 (
 		.button_pio_external_connection_export (<connected-to-button_pio_external_connection_export>), // button_pio_external_connection.export
-		.camera_pins_adc_convst_pin            (<connected-to-camera_pins_adc_convst_pin>),            //                    camera_pins.adc_convst_pin
-		.camera_pins_adc_sck_pin               (<connected-to-camera_pins_adc_sck_pin>),               //                               .adc_sck_pin
-		.camera_pins_adc_sdi_pin               (<connected-to-camera_pins_adc_sdi_pin>),               //                               .adc_sdi_pin
-		.camera_pins_adc_sdo_pin               (<connected-to-camera_pins_adc_sdo_pin>),               //                               .adc_sdo_pin
-		.camera_pins_camera_clk_pin            (<connected-to-camera_pins_camera_clk_pin>),            //                               .camera_clk_pin
-		.camera_pins_camera_si_pin             (<connected-to-camera_pins_camera_si_pin>),             //                               .camera_si_pin
+		.camera_pins_soic                      (<connected-to-camera_pins_soic>),                      //                    camera_pins.soic
+		.camera_pins_soid                      (<connected-to-camera_pins_soid>),                      //                               .soid
+		.camera_pins_reset                     (<connected-to-camera_pins_reset>),                     //                               .reset
+		.camera_pins_pwdn                      (<connected-to-camera_pins_pwdn>),                      //                               .pwdn
+		.camera_pins_vsync                     (<connected-to-camera_pins_vsync>),                     //                               .vsync
+		.camera_pins_href                      (<connected-to-camera_pins_href>),                      //                               .href
+		.camera_pins_pclk                      (<connected-to-camera_pins_pclk>),                      //                               .pclk
+		.camera_pins_xclk                      (<connected-to-camera_pins_xclk>),                      //                               .xclk
+		.camera_pins_data                      (<connected-to-camera_pins_data>),                      //                               .data
 		.clk_clk                               (<connected-to-clk_clk>),                               //                            clk.clk
 		.dipsw_pio_external_connection_export  (<connected-to-dipsw_pio_external_connection_export>),  //  dipsw_pio_external_connection.export
 		.hps_0_f2h_cold_reset_req_reset_n      (<connected-to-hps_0_f2h_cold_reset_req_reset_n>),      //       hps_0_f2h_cold_reset_req.reset_n
@@ -78,8 +81,12 @@
 		.memory_mem_odt                        (<connected-to-memory_mem_odt>),                        //                               .mem_odt
 		.memory_mem_dm                         (<connected-to-memory_mem_dm>),                         //                               .mem_dm
 		.memory_oct_rzqin                      (<connected-to-memory_oct_rzqin>),                      //                               .oct_rzqin
-		.motor_driver_0_pins_pin_a             (<connected-to-motor_driver_0_pins_pin_a>),             //            motor_driver_0_pins.pin_a
-		.motor_driver_0_pins_pin_b             (<connected-to-motor_driver_0_pins_pin_b>),             //                               .pin_b
-		.reset_reset_n                         (<connected-to-reset_reset_n>)                          //                          reset.reset_n
+		.motor_driver_a_pins_pin_a             (<connected-to-motor_driver_a_pins_pin_a>),             //            motor_driver_a_pins.pin_a
+		.motor_driver_a_pins_pin_b             (<connected-to-motor_driver_a_pins_pin_b>),             //                               .pin_b
+		.motor_driver_b_pins_pin_a             (<connected-to-motor_driver_b_pins_pin_a>),             //            motor_driver_b_pins.pin_a
+		.motor_driver_b_pins_pin_b             (<connected-to-motor_driver_b_pins_pin_b>),             //                               .pin_b
+		.reset_reset_n                         (<connected-to-reset_reset_n>),                         //                          reset.reset_n
+		.servo_driver_pins_pin_a               (<connected-to-servo_driver_pins_pin_a>),               //              servo_driver_pins.pin_a
+		.servo_driver_pins_pin_b               (<connected-to-servo_driver_pins_pin_b>)                //                               .pin_b
 	);
 

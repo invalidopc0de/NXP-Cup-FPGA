@@ -44,13 +44,13 @@
 //   use_packets:        true
 //   use_empty:          0
 //   empty_width:        0
-//   data_width:         32
+//   data_width:         8
 //   channel_width:      0
 //   error_width:        0
 //   in_ready_latency:   0
 //   out_ready_latency:  0
-//   in_payload_width:   34
-//   out_payload_width:  34
+//   in_payload_width:   10
+//   out_payload_width:  10
 //   in_payload_map:     in_data,in_startofpacket,in_endofpacket
 //   out_payload_map:    out_data,out_startofpacket,out_endofpacket
 // ------------------------------------------
@@ -60,13 +60,13 @@
 module soc_system_avalon_st_adapter_timing_adapter_0
 (  
  input               in_valid,
- input     [32-1: 0]  in_data,
+ input     [8-1: 0]  in_data,
  input              in_startofpacket,
  input              in_endofpacket,
  // Interface: out
  input               out_ready,
  output reg          out_valid,
- output reg [32-1: 0] out_data,
+ output reg [8-1: 0] out_data,
  output reg          out_startofpacket,
  output reg          out_endofpacket,
   // Interface: clk
@@ -80,8 +80,8 @@ module soc_system_avalon_st_adapter_timing_adapter_0
    //| Signal Declarations
    // ---------------------------------------------------------------------
    
-   reg [34-1:0]   in_payload;
-   reg [34-1:0]   out_payload;
+   reg [10-1:0]   in_payload;
+   reg [10-1:0]   out_payload;
    reg [1-1:0]   ready;   
    reg           in_ready;
    // synthesis translate_off
