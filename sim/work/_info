@@ -77,7 +77,7 @@ R3
 R2
 R4
 R5
-Z20 DEx4 work 9 camera_tb 0 22 9Pn1?EzoOIaEO;=AG=V:l3
+DEx4 work 9 camera_tb 0 22 9Pn1?EzoOIaEO;=AG=V:l3
 l29
 L19
 VBR;^BCoi?9EmKIOAjNnBc0
@@ -92,29 +92,29 @@ R19
 !i113 1
 R13
 Eedge_filter
-Z21 w1478658780
-Z22 DPx4 work 14 nxp_fpga_types 0 22 [bbIzYgmc?Y1BS@`GQXV21
+Z20 w1478658780
+Z21 DPx4 work 14 nxp_fpga_types 0 22 [bbIzYgmc?Y1BS@`GQXV21
 R3
 R4
 R5
 R0
-Z23 8../src/edge_filter.vhd
-Z24 F../src/edge_filter.vhd
+Z22 8../src/edge_filter.vhd
+Z23 F../src/edge_filter.vhd
 l0
 L14
 VlUA1DeGMbDzl=2jYiXhii3
 !s100 V3Dn]F5db_MbICRoQBU5M0
 R8
 32
-Z25 !s110 1478659396
+Z24 !s110 1478659396
 !i10b 1
-Z26 !s108 1478659396.000000
-Z27 !s90 -reportprogress|300|../src/edge_filter.vhd|
-Z28 !s107 ../src/edge_filter.vhd|
+Z25 !s108 1478659396.000000
+Z26 !s90 -reportprogress|300|../src/edge_filter.vhd|
+Z27 !s107 ../src/edge_filter.vhd|
 !i113 1
 R13
 Amagic
-R22
+R21
 R3
 R4
 R5
@@ -125,38 +125,38 @@ VjD8SNzT_5bza9nBm=A=Sc3
 !s100 @nVOGW8BZKf5Pa6d:ahA:2
 R8
 32
-R25
+R24
 !i10b 1
+R25
 R26
 R27
-R28
 !i113 1
 R13
 Eedge_filter_tb
-Z29 w1479188693
-R22
+Z28 w1480169718
+R2
 R3
 R4
 R5
 R0
-Z30 8motor_driver_tb.vhd
-Z31 Fmotor_driver_tb.vhd
+Z29 8ov7670_st_tb.vhd
+Z30 Fov7670_st_tb.vhd
 l0
 L18
 V:d3LOL=m=6ALFUS5L>3YW1
 !s100 Sn0DaHYJAL@gnT`Rnz[6@1
 R8
 32
-Z32 !s110 1479188696
+!s110 1480169757
 !i10b 1
-Z33 !s108 1479188696.000000
-Z34 !s90 -reportprogress|300|motor_driver_tb.vhd|
-Z35 !s107 motor_driver_tb.vhd|
+!s108 1480169757.000000
+Z31 !s90 -reportprogress|300|ov7670_st_tb.vhd|
+Z32 !s107 ov7670_st_tb.vhd|
 !i113 1
 R13
 Atest
-Z36 DEx4 work 19 motor_driver_avalon 0 22 ?_fklCo;YYTAeQK][TV@H1
-R22
+Z33 DEx4 work 19 motor_driver_avalon 0 22 ?_fklCo;YYTAeQK][TV@H1
+R21
 R3
 R4
 R5
@@ -167,77 +167,118 @@ VU8no;WdgJcad[NQ7EA[T10
 !s100 bZYgh@@;LNSRnO8hleXo>3
 R8
 32
-R32
+!s110 1479188696
 !i10b 1
-R33
-R34
-R35
+!s108 1479188696.000000
+Z34 !s90 -reportprogress|300|motor_driver_tb.vhd|
+Z35 !s107 motor_driver_tb.vhd|
 !i113 1
 R13
-Emotor_driver_avalon
-Z37 w1479189537
+Z36 Fmotor_driver_tb.vhd
+Z37 8motor_driver_tb.vhd
+Ei2c_sender
+Z38 w1480481283
 R3
 R4
 R5
 R0
-Z38 8../src/motor_driver/motor_driver_avalon.vhd
-Z39 F../src/motor_driver/motor_driver_avalon.vhd
+Z39 8../src/OV7670_camera/third_party/i2c_sender.vhd
+Z40 F../src/OV7670_camera/third_party/i2c_sender.vhd
+l0
+L11
+VUl^0o4H48>901:keGGHi41
+!s100 ebk>in;Ra6gE<>>b8YoD90
+R8
+32
+Z41 !s110 1480485011
+!i10b 1
+Z42 !s108 1480485011.000000
+Z43 !s90 -reportprogress|300|../src/OV7670_camera/third_party/i2c_sender.vhd|
+Z44 !s107 ../src/OV7670_camera/third_party/i2c_sender.vhd|
+!i113 1
+R13
+Abehavioral
+R3
+R4
+R5
+DEx4 work 10 i2c_sender 0 22 Ul^0o4H48>901:keGGHi41
+l28
+L24
+VV9Qk>=cP>BTjiGdJR>Zd;1
+!s100 d?Ezn_HI:EFTUYWR=AGMW3
+R8
+32
+R41
+!i10b 1
+R42
+R43
+R44
+!i113 1
+R13
+Emotor_driver_avalon
+Z45 w1479189537
+R3
+R4
+R5
+R0
+Z46 8../src/motor_driver/motor_driver_avalon.vhd
+Z47 F../src/motor_driver/motor_driver_avalon.vhd
 l0
 L17
 V?_fklCo;YYTAeQK][TV@H1
 !s100 2zaOYAlA`b_=jiJ8fcJRk3
 R8
 32
-Z40 !s110 1479225776
+Z48 !s110 1479225776
 !i10b 1
-Z41 !s108 1479225776.000000
-Z42 !s90 -reportprogress|300|../src/motor_driver/motor_driver_avalon.vhd|
-Z43 !s107 ../src/motor_driver/motor_driver_avalon.vhd|
+Z49 !s108 1479225776.000000
+Z50 !s90 -reportprogress|300|../src/motor_driver/motor_driver_avalon.vhd|
+Z51 !s107 ../src/motor_driver/motor_driver_avalon.vhd|
 !i113 1
 R13
 Artl
 R3
 R4
 R5
-R36
+R33
 l93
 L38
 VX3RcYD0M[djmzlFiNc<h<0
 !s100 dY@1X=CZLU^RTUn^a_BcQ0
 R8
 32
-R40
+R48
 !i10b 1
-R41
-R42
-R43
+R49
+R50
+R51
 !i113 1
 R13
 Emotor_driver_tb
-Z44 w1479189502
-R22
+Z52 w1479189502
+R21
 R3
 R4
 R5
 R0
-R30
-R31
+R37
+R36
 l0
 L18
 VYmmgOIJ1S2e_a`h`8O@c[2
 !s100 o7aRoOZmOSSJP>SEJZYe@1
 R8
 32
-R40
+R48
 !i10b 1
-R41
+R49
 R34
 R35
 !i113 1
 R13
 Atest
-R36
-R22
+R33
+R21
 R3
 R4
 R5
@@ -248,9 +289,9 @@ V[PmKmclE1D5>f8FGdNI0V2
 !s100 5SZm@eNAzb>=TamOce3:m1
 R8
 32
-R40
+R48
 !i10b 1
-R41
+R49
 R34
 R35
 !i113 1
@@ -269,38 +310,236 @@ VO@Z@lT8l`YTG4]9HBGMmX3
 !s100 9[CCfenOEMVC_83:=eY@V2
 R8
 32
-R9
+R41
 !i10b 1
-!s108 1479252724.000000
+R42
 !s90 -reportprogress|300|../src/nxp_fpga_types.vhd|
 !s107 ../src/nxp_fpga_types.vhd|
 !i113 1
 R13
-Epwm
-Z45 w1479182744
-Z46 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
-Z47 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+Eov7670_capture
+Z53 w1480449558
+R3
 R4
 R5
 R0
-Z48 8../src/motor_driver/thirdparty/pwm.vhd
-Z49 F../src/motor_driver/thirdparty/pwm.vhd
+Z54 8../src/OV7670_camera/ov7670_capture.vhd
+Z55 F../src/OV7670_camera/ov7670_capture.vhd
+l0
+L11
+VYQYTEBcO_8AnVXO569`VB0
+!s100 `S0S<SL7o<56fL[ABo]Ua1
+R8
+32
+R41
+!i10b 1
+R42
+Z56 !s90 -reportprogress|300|../src/OV7670_camera/ov7670_capture.vhd|
+Z57 !s107 ../src/OV7670_camera/ov7670_capture.vhd|
+!i113 1
+R13
+Abehavioral
+R3
+R4
+R5
+DEx4 work 14 ov7670_capture 0 22 YQYTEBcO_8AnVXO569`VB0
+l66
+L29
+VB2]S<A`oI15QNgL502b4d0
+!s100 B6AXXEA>9848b1nD<46fL3
+R8
+32
+R41
+!i10b 1
+R42
+R56
+R57
+!i113 1
+R13
+Eov7670_controller
+Z58 w1480485005
+R3
+R4
+R5
+R0
+Z59 8../src/OV7670_camera/third_party/ov7670_controller.vhd
+Z60 F../src/OV7670_camera/third_party/ov7670_controller.vhd
+l0
+L11
+V3hZ0DQ4fD:aA^WKmN6G[O2
+!s100 eO`:?zT4R8GgPQK[_UEW20
+R8
+32
+R41
+!i10b 1
+R42
+Z61 !s90 -reportprogress|300|../src/OV7670_camera/third_party/ov7670_controller.vhd|
+Z62 !s107 ../src/OV7670_camera/third_party/ov7670_controller.vhd|
+!i113 1
+R13
+Abehavioral
+R3
+R4
+R5
+DEx4 work 17 ov7670_controller 0 22 3hZ0DQ4fD:aA^WKmN6G[O2
+l82
+L25
+VU@lhCJlJ@F`6K]2VadQLO1
+!s100 Y5aj_Vn=HTeChPR`DJd`l3
+R8
+32
+R41
+!i10b 1
+R42
+R61
+R62
+!i113 1
+R13
+Eov7670_registers
+Z63 w1480394850
+R3
+R4
+R5
+R0
+Z64 8../src/OV7670_camera/third_party/ov7670_registers.vhd
+Z65 F../src/OV7670_camera/third_party/ov7670_registers.vhd
+l0
+L12
+V^S7GNUg`BmRQOaSoWJ7=<1
+!s100 _GT0TI]mT3`LKlIjXQ_Cl2
+R8
+32
+R41
+!i10b 1
+R42
+Z66 !s90 -reportprogress|300|../src/OV7670_camera/third_party/ov7670_registers.vhd|
+Z67 !s107 ../src/OV7670_camera/third_party/ov7670_registers.vhd|
+!i113 1
+R13
+Abehavioral
+R3
+R4
+R5
+DEx4 work 16 ov7670_registers 0 22 ^S7GNUg`BmRQOaSoWJ7=<1
+l23
+L20
+VGJ[YAh9`RIkVKe:U_C2D92
+!s100 9igPB8AeFIO:U@T8U:I>P1
+R8
+32
+R41
+!i10b 1
+R42
+R66
+R67
+!i113 1
+R13
+Eov7670_st
+Z68 w1480484544
+R3
+R4
+R5
+R0
+Z69 8../src/OV7670_camera/ov7670_st.vhd
+Z70 F../src/OV7670_camera/ov7670_st.vhd
+l0
+L15
+VdMhdRi:bmFC;ghojD2IBS0
+!s100 mzQg=;SnAP5PkmY51aI073
+R8
+32
+R41
+!i10b 1
+R42
+Z71 !s90 -reportprogress|300|../src/OV7670_camera/ov7670_st.vhd|
+Z72 !s107 ../src/OV7670_camera/ov7670_st.vhd|
+!i113 1
+R13
+Artl
+R3
+R4
+R5
+Z73 DEx4 work 9 ov7670_st 0 22 dMhdRi:bmFC;ghojD2IBS0
+l80
+L45
+VC1aQeoUK`mPSOYSfB8_Ah2
+!s100 PfFTBUSQMW3_Pa96TH95B2
+R8
+32
+R41
+!i10b 1
+R42
+R71
+R72
+!i113 1
+R13
+Eov7670_st_tb
+Z74 w1480481885
+R2
+R3
+R4
+R5
+R0
+R29
+R30
+l0
+L18
+V4;5KZ_3T:3o?KYVbL1B`^0
+!s100 <JWKn:V>AUI6:e<8<=g_D0
+R8
+32
+Z75 !s110 1480485012
+!i10b 1
+Z76 !s108 1480485012.000000
+R31
+R32
+!i113 1
+R13
+Atest
+R73
+R2
+R3
+R4
+R5
+Z77 DEx4 work 12 ov7670_st_tb 0 22 4;5KZ_3T:3o?KYVbL1B`^0
+l75
+L20
+Z78 VKA<:C2GgaozYmgN@[4PDb1
+Z79 !s100 WDPlB9PZafj_^8_kM9aIg1
+R8
+32
+R75
+!i10b 1
+R76
+R31
+R32
+!i113 1
+R13
+Epwm
+Z80 w1479182744
+Z81 DPx4 ieee 15 std_logic_arith 0 22 [G314=:2zXJ`VORJe1J@Z1
+Z82 DPx4 ieee 18 std_logic_unsigned 0 22 ;eZjO2D4ZDz<]0>8AL<ne1
+R4
+R5
+R0
+Z83 8../src/motor_driver/thirdparty/pwm.vhd
+Z84 F../src/motor_driver/thirdparty/pwm.vhd
 l0
 L30
 Vi<SX6oz3_W52SWXhC?=_D2
 !s100 fl675Z]f@W6fJ4_MAP4EI3
 R8
 32
-R40
+R48
 !i10b 1
-R41
-Z50 !s90 -reportprogress|300|../src/motor_driver/thirdparty/pwm.vhd|
-Z51 !s107 ../src/motor_driver/thirdparty/pwm.vhd|
+R49
+Z85 !s90 -reportprogress|300|../src/motor_driver/thirdparty/pwm.vhd|
+Z86 !s107 ../src/motor_driver/thirdparty/pwm.vhd|
 !i113 1
 R13
 Alogic
-R46
-R47
+R81
+R82
 R4
 R5
 DEx4 work 3 pwm 0 22 i<SX6oz3_W52SWXhC?=_D2
@@ -310,36 +549,36 @@ VUWzCz2;_W2HQC<foXck<C3
 !s100 kf6R^@[<:dYEl<CE3oIFV0
 R8
 32
-R40
+R48
 !i10b 1
-R41
-R50
-R51
+R49
+R85
+R86
 !i113 1
 R13
 Esobel
-Z52 w1478644400
-Z53 DPx12 altera_lnsim 23 altera_lnsim_components 0 22 6JY960D0bDocA`LkFTb[j1
+Z87 w1478644400
+Z88 DPx12 altera_lnsim 23 altera_lnsim_components 0 22 6JY960D0bDocA`LkFTb[j1
 R4
 R5
 R0
-Z54 8../ip/sobel/sobel_sim/sobel.vhd
-Z55 F../ip/sobel/sobel_sim/sobel.vhd
+Z89 8../ip/sobel/sobel_sim/sobel.vhd
+Z90 F../ip/sobel/sobel_sim/sobel.vhd
 l0
 L20
 V?MBOQ:OI;8<RS`UFYDFb10
 !s100 BX<oYc9bVR5A^5dBTo51`0
 R8
 32
-R25
+R24
 !i10b 1
-Z56 !s108 1478659395.000000
-Z57 !s90 -reportprogress|300|../ip/sobel/sobel_sim/sobel.vhd|
-Z58 !s107 ../ip/sobel/sobel_sim/sobel.vhd|
+Z91 !s108 1478659395.000000
+Z92 !s90 -reportprogress|300|../ip/sobel/sobel_sim/sobel.vhd|
+Z93 !s107 ../ip/sobel/sobel_sim/sobel.vhd|
 !i113 1
 R13
 Asyn
-R53
+R88
 R4
 R5
 DEx4 work 5 sobel 0 22 ?MBOQ:OI;8<RS`UFYDFb10
@@ -349,11 +588,11 @@ VdMblW1_z?O4>0;l>l=4zn2
 !s100 C7bFK9?MVVFCoGi4L0U;d1
 R8
 32
-R25
+R24
 !i10b 1
-R56
-R57
-R58
+R91
+R92
+R93
 !i113 1
 R13
 Artl
