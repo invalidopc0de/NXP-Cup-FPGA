@@ -91,7 +91,6 @@ Homeworks/*
 *example*
 *~
 *.sdc
-*.tcl
 *.pin
 *.mif
 *.hex
