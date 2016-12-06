@@ -1,0 +1,29 @@
+{
+	"camera_config": "camera_config.txt",
+	"line_analyzer": {
+		"LineThreshold":  50,
+		"LineTimeout":	5,
+		"StopDetectionEnabled":	 0,
+		"PrintDebug": 0,
+		"PrintLineDebug": 1,
+		"SampleOffset": 15,
+		"StartOffset": 10,
+        	"PointDiff": 170,
+		"EndOffset": 10,
+        	"GNUPlotEnabled": 1,
+        	"GNUPlotFile": "plot.dat",
+        	"LineHistEnabled": 1
+	},
+	"control_loop": {
+		"Kp": 1.2,
+		"Ki": 0.01,
+		"Kd": 1.0,
+		"StopDetectionEnabled":	 0,
+		"DefaultSpeed": 35,
+		"FrameStraightDelay": 15,
+		"DiffSteering": 0,
+		"DiffSteeringFactor": 0.8,
+		"AutoSpeedControl": 0,
+		"AutoSpeedRange": 5.0
+	}
+}

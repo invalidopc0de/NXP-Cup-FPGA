@@ -1,0 +1,151 @@
+%
+%    Generated: VHDL to LaTeX
+%    URL:       www.mamikon.net
+%    Author:    Anna Bansaghi
+%    Version:   1.0.5
+%    Date:      4 December 2016
+%
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{calc,arrows}
+\makeatletter
+\pgfdeclareshape{circuit}{
+  \savedanchor\northeast{
+    \pgfmathsetlength\pgf@x{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@y{\pgfshapeminheight}
+    \pgf@x=0.5\pgf@x
+    \pgf@y=0.5\pgf@y}
+  \savedanchor\southwest{
+    \pgfmathsetlength\pgf@x{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@y{\pgfshapeminheight}
+    \pgf@x=-0.5\pgf@x
+    \pgf@y=-2.35\pgf@y}
+  \inheritanchorborder[from=rectangle]
+  \anchor{center}{\pgfpointorigin}
+  \anchor{north}{\northeast \pgf@x=0pt}
+  \anchor{east}{\northeast \pgf@y=0pt}
+  \anchor{south}{\southwest \pgf@x=0pt}
+  \anchor{west}{\southwest \pgf@y=0pt}
+  \anchor{north east}{\northeast}
+  \anchor{north west}{\northeast \pgf@x=-\pgf@x}
+  \anchor{south west}{\southwest}
+  \anchor{south east}{\southwest \pgf@x=-\pgf@x}
+  \anchor{text}{
+    \pgfpointorigin
+    \advance\pgf@x by -.5\wd\pgfnodeparttextbox
+    \advance\pgf@y by -10.1625\ht\pgfnodeparttextbox
+    \advance\pgf@y by +.5\dp\pgfnodeparttextbox}
+\anchor{ina}{
+  \pgf@process{\northeast}
+  \pgf@x=-1\pgf@x
+  \pgf@y=0.5\pgf@y}
+\anchor{inb}{
+  \pgf@process{\northeast}
+  \pgf@x=-1\pgf@x
+  \pgf@y=0.09999999999999998\pgf@y}
+\anchor{outa}{
+  \pgf@process{\northeast}
+  \pgf@y=0.5\pgf@y}
+\anchor{outb}{
+  \pgf@process{\northeast}
+  \pgf@y=0.09999999999999998\pgf@y}
+\anchor{outc}{
+  \pgf@process{\northeast}
+  \pgf@y=-0.3\pgf@y}
+\anchor{outd}{
+  \pgf@process{\northeast}
+  \pgf@y=-0.7000000000000001\pgf@y}
+\anchor{oute}{
+  \pgf@process{\northeast}
+  \pgf@y=-1.1\pgf@y}
+\anchor{outf}{
+  \pgf@process{\northeast}
+  \pgf@y=-1.8\pgf@y}
+\anchor{ioa}{
+  \pgf@process{\northeast}
+  \pgf@y=-2.2\pgf@y}
+\anchor{outg}{
+  \pgf@process{\northeast}
+  \pgf@y=-2.6\pgf@y}
+\anchor{outh}{
+  \pgf@process{\northeast}
+  \pgf@y=-3\pgf@y}
+\anchor{inc}{
+  \pgf@process{\northeast}
+  \pgf@x=-1\pgf@x
+  \pgf@y=-0.6000000000000001\pgf@y}
+\anchor{ind}{
+  \pgf@process{\northeast}
+  \pgf@x=-1\pgf@x
+  \pgf@y=-1\pgf@y}
+\anchor{ine}{
+  \pgf@process{\northeast}
+  \pgf@x=-1\pgf@x
+  \pgf@y=-1.4\pgf@y}
+\anchor{outi}{
+  \pgf@process{\northeast}
+  \pgf@y=-3.4\pgf@y}
+\anchor{inf}{
+  \pgf@process{\northeast}
+  \pgf@x=-1\pgf@x
+  \pgf@y=-1.8\pgf@y}
+\anchor{ing}{
+  \pgf@process{\northeast}
+  \pgf@x=-1\pgf@x
+  \pgf@y=-2.5\pgf@y}
+\anchor{inh}{
+  \pgf@process{\northeast}
+  \pgf@x=-1\pgf@x
+  \pgf@y=-2.899999999999999\pgf@y}
+\anchor{outj}{
+  \pgf@process{\northeast}
+  \pgf@y=-4.1\pgf@y}
+\anchor{ini}{
+  \pgf@process{\northeast}
+  \pgf@x=-1\pgf@x
+  \pgf@y=-3.299999999999999\pgf@y}
+\anchor{inj}{
+  \pgf@process{\northeast}
+  \pgf@x=-1\pgf@x
+  \pgf@y=-3.699999999999999\pgf@y}
+\anchor{outk}{
+  \pgf@process{\northeast}
+  \pgf@y=-4.5\pgf@y}
+\backgroundpath{
+  \pgfpathrectanglecorners{\southwest}{\northeast}
+  \begingroup
+    \tikzset{labels}
+    \tikz@textfont
+  \endgroup}}
+\tikzset{add font/.code={\expandafter\def\expandafter\tikz@textfont\expandafter{\tikz@textfont#1}}}
+\tikzset{labels/.style={font=\sffamily\scriptsize}}
+\tikzset{every circuit node/.style={draw,minimum width=2cm,minimum height=2.5cm,very thick,inner sep=1mm,outer sep=0pt,cap=round,add font=\sffamily\bfseries}}
+\makeatother
+\begin{document}
+\centering
+\begin{tikzpicture}[font=\sffamily,>=triangle 45]
+  \node [shape=circuit] (item) at (0,0) {ov7670\_st};
+  \draw [<-] (item.ina) node [anchor=west,labels] {} -- +(-1,0) node [anchor=east] {reset\_reset};
+  \draw [<-] (item.inb) node [anchor=west,labels] {} -- +(-1,0) node [anchor=east] {clock\_clk};
+  \draw [->] (item.outa) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {line0\_out\_data};
+  \draw [->] (item.outb) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {line0\_out\_valid};
+  \draw [->] (item.outc) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {line0\_out\_channel};
+  \draw [->] (item.outd) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {line0\_out\_startofpacket};
+  \draw [->] (item.oute) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {line0\_out\_endofpacket};
+  \draw [->] (item.outf) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {ov\_sensor\_sioc};
+  \draw [<->] (item.ioa) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {ov\_sensor\_siod};
+  \draw [->] (item.outg) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {ov\_sensor\_reset};
+  \draw [->] (item.outh) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {ov\_sensor\_pwdn};
+  \draw [<-] (item.inc) node [anchor=west,labels] {} -- +(-1,0) node [anchor=east] {ov\_sensor\_vsync};
+  \draw [<-] (item.ind) node [anchor=west,labels] {} -- +(-1,0) node [anchor=east] {ov\_sensor\_href};
+  \draw [<-] (item.ine) node [anchor=west,labels] {} -- +(-1,0) node [anchor=east] {ov\_sensor\_pclk};
+  \draw [->] (item.outi) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {ov\_sensor\_xclk};
+  \draw [<-] (item.inf) node [anchor=west,labels] {} -- +(-1,0) node [anchor=east] {ov\_sensor\_data};
+  \draw [<-] (item.ing) node [anchor=west,labels] {} -- +(-1,0) node [anchor=east] {control\_address};
+  \draw [<-] (item.inh) node [anchor=west,labels] {} -- +(-1,0) node [anchor=east] {control\_read};
+  \draw [->] (item.outj) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {control\_readdata};
+  \draw [<-] (item.ini) node [anchor=west,labels] {} -- +(-1,0) node [anchor=east] {control\_write};
+  \draw [<-] (item.inj) node [anchor=west,labels] {} -- +(-1,0) node [anchor=east] {control\_writedata};
+  \draw [->] (item.outk) node [anchor=east,labels] {} -- +(1,0) node [anchor=west] {control\_waitrequest};
+\end{tikzpicture}
+\end{document}
